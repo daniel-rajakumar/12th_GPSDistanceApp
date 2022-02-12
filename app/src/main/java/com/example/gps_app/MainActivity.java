@@ -28,7 +28,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -102,7 +104,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.custom_map_style));
+        globalVariables.setGoogleMap(googleMap);
 
+//        LatLng latLng = new LatLng(globalVariables.getCurrentLocation().getLatitude(),
+//                                    globalVariables.getCurrentLocation().getLatitude());
+//
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(latLng);
+//        googleMap.addMarker(markerOptions);
     }
 
     @Override

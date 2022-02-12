@@ -1,14 +1,18 @@
 package com.example.gps_app;
 
 import android.app.Application;
+import android.location.Location;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 
 public class GlobalVariables extends Application {
 
     private TextView textView_lat, textView_lon, textView_locationName, textView_distance;
     private MapView mapView;
+    private Location currentLocation;
+    private GoogleMap googleMap;
 
     public void setValues(MainActivity mainActivity) {
         textView_lat = mainActivity.findViewById(R.id.textView_lat);
@@ -28,6 +32,22 @@ public class GlobalVariables extends Application {
 
     public TextView getTextView_distance() {
         return textView_distance;
+    }
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setGoogleMap(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+    }
+
+    public GoogleMap getGoogleMap() {
+        return googleMap;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
     }
 
     public MapView getMapView() {
