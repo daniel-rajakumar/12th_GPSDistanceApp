@@ -43,10 +43,6 @@ class GPSLocation implements LocationListener {
     @Override
     public void onLocationChanged(@NonNull Location location) {
         try {
-//            currentLocation = location;
-//            Log.d(TAG, "onLocationChanged: " + " updated");
-//            Log.d(TAG, MessageFormat.format("run: {0} \n\n-> ({1}, {2})", addresses.get(0).getAddressLine(0), location.getLatitude(), location.getLongitude()));
-
             updateDistance(location);
             updateViews(location);
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
