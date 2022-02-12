@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     GlobalVariables globalVariables;
 
-
     void run() {
         assignValues();
         startLocationRequesting();
