@@ -1,9 +1,9 @@
 package com.example.gps_app;
 
 public class MyLocation {
-    private double latitude, longitude;
-    private String locationName;
-    private double timeSpend;
+    private final double latitude, longitude;
+    private final String locationName;
+    private final double timeSpend;
     private static double distanceTraveled;
 
     public MyLocation(double latitude, double longitude, String locationName, double timeSpend) {

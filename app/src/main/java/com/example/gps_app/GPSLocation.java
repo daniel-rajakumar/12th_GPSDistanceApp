@@ -70,10 +70,10 @@ class GPSLocation implements LocationListener {
 
     public void updateViews(Location location) throws IOException {
         MyLocation myLocation = globalVariables.getLocationsMap().get(location);
-        globalVariables.getTextView_lat().setText("lat: " + myLocation.getLatitude());
-        globalVariables.getTextView_lon().setText("lon: " + myLocation.getLongitude());
-        globalVariables.getTextView_locationName().setText("location name: " + myLocation.getLocationName());
-        globalVariables.getTextView_distance().setText("distance: " + MyLocation.getDistanceTraveled());
+        globalVariables.getTextView_latLon().setText("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
+        globalVariables.getTextView_locationName().setText(myLocation.getLocationName());
+//        globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + "");
+        globalVariables.getTextView_distance().setText(myLocation.getLocationName() + "");
         globalVariables.setCurrentLocation(location);
     }
 
