@@ -46,8 +46,9 @@ class GPSLocation implements LocationListener {
             updateGlobalVariables(location);
             updateDistance(location);
             updateViews(location);
-            addMarkerTo(new LatLng(location.getLatitude(), location.getLongitude()));
-//            moveCameraTo(latLng);
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            addMarkerTo(latLng);
+            moveCameraTo(latLng);
             prevLocation = location;
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +66,9 @@ class GPSLocation implements LocationListener {
 
     public void updateDistance(Location location){
         if (prevLocation == null) prevLocation = location;
-        MyLocation.addDistance(location.distanceTo(prevLocation));
+
+        if (globalVariables.getToggleButton_track().isChecked())
+            MyLocation.addDistance(location.distanceTo(prevLocation));
     }
 
     public void updateViews(Location location) throws IOException {
@@ -84,6 +87,8 @@ class GPSLocation implements LocationListener {
     }
 
     public void moveCameraTo(LatLng latLng){
-        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        if (globalVariables.getToggleButton_camera().isChecked())
+            globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+
     }
 }
