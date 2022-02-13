@@ -7,12 +7,17 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Stack;
+
 public class GlobalVariables extends Application {
 
     private TextView textView_lat, textView_lon, textView_locationName, textView_distance;
     private MapView mapView;
     private Location currentLocation;
     private GoogleMap googleMap;
+    private Map<Location, MyLocation> locationsMap;
 
     public void setValues(MainActivity mainActivity) {
         textView_lat = mainActivity.findViewById(R.id.textView_lat);
@@ -20,6 +25,7 @@ public class GlobalVariables extends Application {
         textView_locationName = mainActivity.findViewById(R.id.textView_locationName);
         textView_distance = mainActivity.findViewById(R.id.textView_distance);
         mapView = mainActivity.findViewById(R.id.mapView);
+        locationsMap = new LinkedHashMap<>();
     }
 
     public TextView getTextView_lon() {
@@ -52,6 +58,10 @@ public class GlobalVariables extends Application {
 
     public MapView getMapView() {
         return mapView;
+    }
+
+    public Map<Location, MyLocation> getLocationsMap() {
+        return locationsMap;
     }
 
     public TextView getTextView_lat() {

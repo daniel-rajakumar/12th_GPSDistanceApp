@@ -43,10 +43,10 @@ class GPSLocation implements LocationListener {
     @Override
     public void onLocationChanged(@NonNull Location location) {
         try {
+            updateGlobalVariables(location);
             updateDistance(location);
             updateViews(location);
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            addMarkerTo(latLng);
+            addMarkerTo(new LatLng(location.getLatitude(), location.getLongitude()));
 //            moveCameraTo(latLng);
             prevLocation = location;
         } catch (IOException e) {
@@ -54,21 +54,26 @@ class GPSLocation implements LocationListener {
         }
     }
 
+    public void updateGlobalVariables(Location location) throws IOException {
+        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        String locationName = addresses.get(0).getAddressLine(0);
+        MyLocation myLocation = new MyLocation(latitude, longitude, locationName, 0);
+        globalVariables.getLocationsMap().put(location, myLocation);
+    }
+
     public void updateDistance(Location location){
         if (prevLocation == null) prevLocation = location;
-        distance += location.distanceTo(prevLocation);
+        MyLocation.addDistance(location.distanceTo(prevLocation));
     }
 
     public void updateViews(Location location) throws IOException {
-        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-        double lat = location.getLatitude();
-        double lon = location.getLongitude();
-        String locationName = addresses.get(0).getAddressLine(0);
-
-        globalVariables.getTextView_lat().setText("lat: " + lat);
-        globalVariables.getTextView_lon().setText("lon: " + lon);
-        globalVariables.getTextView_locationName().setText("location name: " + locationName);
-        globalVariables.getTextView_distance().setText("distance: " + distance);
+        MyLocation myLocation = globalVariables.getLocationsMap().get(location);
+        globalVariables.getTextView_lat().setText("lat: " + myLocation.getLatitude());
+        globalVariables.getTextView_lon().setText("lon: " + myLocation.getLongitude());
+        globalVariables.getTextView_locationName().setText("location name: " + myLocation.getLocationName());
+        globalVariables.getTextView_distance().setText("distance: " + MyLocation.getDistanceTraveled());
         globalVariables.setCurrentLocation(location);
     }
 

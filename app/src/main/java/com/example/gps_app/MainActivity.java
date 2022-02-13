@@ -105,13 +105,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.custom_map_style));
         globalVariables.setGoogleMap(googleMap);
-
-//        LatLng latLng = new LatLng(globalVariables.getCurrentLocation().getLatitude(),
-//                                    globalVariables.getCurrentLocation().getLatitude());
-//
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(latLng);
-//        googleMap.addMarker(markerOptions);
     }
 
     @Override
