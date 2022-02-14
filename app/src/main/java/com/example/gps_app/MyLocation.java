@@ -36,4 +36,8 @@ public class MyLocation {
     public static void addDistance(double distance){
         distanceTraveled += distance;
     }
+
+    public static void resetDistance(){
+        distanceTraveled = 0;
+    }
 }

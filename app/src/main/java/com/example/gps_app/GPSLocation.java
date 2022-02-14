@@ -42,13 +42,19 @@ class GPSLocation implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
+        Log.d(TAG, "onLocationChanged: (" + location.getLatitude() + ", " + location.getLongitude() + ")");
         try {
             updateGlobalVariables(location);
-            updateDistance(location);
-            updateViews(location);
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            addMarkerTo(latLng);
-            moveCameraTo(latLng);
+            if (globalVariables.getToggleButton_track().isChecked()){
+                updateViews(location);
+                updateDistance(location);
+                addMarkerTo(latLng);
+            }
+            if (globalVariables.getToggleButton_camera().isChecked()) {
+                moveCameraTo(latLng);
+            }
+            setUpResetButton();
             prevLocation = location;
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,8 +81,8 @@ class GPSLocation implements LocationListener {
         MyLocation myLocation = globalVariables.getLocationsMap().get(location);
         globalVariables.getTextView_latLon().setText("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
         globalVariables.getTextView_locationName().setText(myLocation.getLocationName());
-//        globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + "");
-        globalVariables.getTextView_distance().setText(myLocation.getLocationName() + "");
+        globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
+//        globalVariables.getTextView_distance().setText(myLocation.getLocationName() + "");
         globalVariables.setCurrentLocation(location);
     }
 
@@ -87,8 +93,14 @@ class GPSLocation implements LocationListener {
     }
 
     public void moveCameraTo(LatLng latLng){
-        if (globalVariables.getToggleButton_camera().isChecked())
-            globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+    }
+
+    public void setUpResetButton(){
+        globalVariables.getButton_reset().setOnClickListener(v -> {
+            MyLocation.resetDistance();
+            globalVariables.getGoogleMap().clear();
+        });
 
     }
 }

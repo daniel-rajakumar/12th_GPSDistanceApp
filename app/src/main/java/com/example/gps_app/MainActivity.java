@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void startLocationRequesting(){
-        globalVariables.getTextView_distance().setText("Yes working :) ");
+//        globalVariables.getTextView_distance().setText("Yes working :) ");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            globalVariables.getTextView_distance().setText("Not working :( ");
+//            globalVariables.getTextView_distance().setText("Not working :( ");
             return;
         }
-        locationManager.requestLocationUpdates(getBestProvider(), 0, 0, new GPSLocation(this));
+        locationManager.requestLocationUpdates(getBestProvider(), 1000, 10, new GPSLocation(this));
     }
 
     String getBestProvider(){

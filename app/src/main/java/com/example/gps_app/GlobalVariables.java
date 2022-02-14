@@ -2,8 +2,11 @@ package com.example.gps_app;
 
 import android.app.Application;
 import android.location.Location;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -19,14 +22,16 @@ public class GlobalVariables extends Application {
     private GoogleMap googleMap;
     private Map<Location, MyLocation> locationsMap;
     ToggleButton toggleButton_camera, toggleButton_track;
+    Button button_reset;
 
-    public void setValues(MainActivity mainActivity) {
+    public void setValues(@NonNull MainActivity mainActivity) {
         textView_latLon = mainActivity.findViewById(R.id.textView_latLon);
         textView_locationName = mainActivity.findViewById(R.id.textView_locationName);
         textView_distance = mainActivity.findViewById(R.id.textView_distance);
         mapView = mainActivity.findViewById(R.id.mapView);
         toggleButton_camera = mainActivity.findViewById(R.id.toggleButton_camera);
         toggleButton_track = mainActivity.findViewById(R.id.toggleButton_track);
+        button_reset = mainActivity.findViewById(R.id.button_reset);
         locationsMap = new LinkedHashMap<>();
     }
 
@@ -72,5 +77,9 @@ public class GlobalVariables extends Application {
 
     public ToggleButton getToggleButton_track() {
         return toggleButton_track;
+    }
+
+    public Button getButton_reset() {
+        return button_reset;
     }
 }

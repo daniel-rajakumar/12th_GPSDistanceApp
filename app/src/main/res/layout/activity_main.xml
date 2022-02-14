@@ -12,7 +12,7 @@
         android:id="@+id/textView_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="meters"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
@@ -20,6 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
     <com.google.android.gms.maps.MapView
+        android:visibility="invisible"
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -51,7 +52,7 @@
             android:id="@+id/textView_latLon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="(Lat, Lon)"
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/textView_location"
@@ -100,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="one two three four five six seven eight nine ten"
+                android:text="Name"
                 android:textAlignment="textStart"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
@@ -117,6 +118,7 @@
 
 
     <ToggleButton
+        android:visibility="invisible"
         android:id="@+id/toggleButton_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
