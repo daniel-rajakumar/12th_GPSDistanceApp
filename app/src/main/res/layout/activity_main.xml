@@ -20,7 +20,6 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
     <com.google.android.gms.maps.MapView
-        android:visibility="invisible"
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -118,7 +117,6 @@
 
 
     <ToggleButton
-        android:visibility="invisible"
         android:id="@+id/toggleButton_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -29,6 +29,7 @@ class GPSLocation implements LocationListener {
     GPSLocation(MainActivity mainActivity){
         globalVariables = (GlobalVariables) mainActivity.getApplication();
         geocoder = new Geocoder(mainActivity, Locale.getDefault());
+        setUpResetButton();
     }
 
     @Override
@@ -54,7 +55,6 @@ class GPSLocation implements LocationListener {
             if (globalVariables.getToggleButton_camera().isChecked()) {
                 moveCameraTo(latLng);
             }
-            setUpResetButton();
             prevLocation = location;
         } catch (IOException e) {
             e.printStackTrace();
@@ -72,9 +72,7 @@ class GPSLocation implements LocationListener {
 
     public void updateDistance(Location location){
         if (prevLocation == null) prevLocation = location;
-
-        if (globalVariables.getToggleButton_track().isChecked())
-            MyLocation.addDistance(location.distanceTo(prevLocation));
+        MyLocation.addDistance(location.distanceTo(prevLocation));
     }
 
     public void updateViews(Location location) throws IOException {
@@ -93,13 +91,14 @@ class GPSLocation implements LocationListener {
     }
 
     public void moveCameraTo(LatLng latLng){
-        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f));
     }
 
     public void setUpResetButton(){
         globalVariables.getButton_reset().setOnClickListener(v -> {
             MyLocation.resetDistance();
             globalVariables.getGoogleMap().clear();
+            globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
         });
 
     }

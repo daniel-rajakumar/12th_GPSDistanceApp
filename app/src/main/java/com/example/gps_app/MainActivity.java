@@ -51,28 +51,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         createMap();
     }
 
-    void startLocationRequesting(){
+    void startLocationRequesting() {
 //        globalVariables.getTextView_distance().setText("Yes working :) ");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            globalVariables.getTextView_distance().setText("Not working :( ");
             return;
         }
-        locationManager.requestLocationUpdates(getBestProvider(), 1000, 10, new GPSLocation(this));
+        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, new GPSLocation(this));
     }
 
-    String getBestProvider(){
+    String getBestProvider() {
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
         return locationManager.getBestProvider(criteria, true);
     }
 
-    void assignValues(){
+    void assignValues() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         globalVariables = (GlobalVariables) this.getApplication();
         globalVariables.setValues(this);
     }
 
-    void createMap(){
+    void createMap() {
         globalVariables.getMapView().getMapAsync(this);
         globalVariables.getMapView().onCreate(savedInstanceState);
     }
@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        switch (requestCode){
+        switch (requestCode) {
             case PERMISSION_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Thank you for the permission", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "This app requires location permission", Toast.LENGTH_SHORT).show();
@@ -92,8 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
-    public void makeStatusBarTransparent(){
+    public void makeStatusBarTransparent() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         WindowManager.LayoutParams winParams = getWindow().getAttributes();
         winParams.flags &= ~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
@@ -105,6 +104,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.custom_map_style));
         globalVariables.setGoogleMap(googleMap);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
     }
 
     @Override
