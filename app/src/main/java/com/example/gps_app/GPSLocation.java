@@ -6,6 +6,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -24,12 +26,15 @@ class GPSLocation implements LocationListener {
     Geocoder geocoder;
     GlobalVariables globalVariables;
     Location prevLocation;
+    MainActivity mainActivity;
 
 
     GPSLocation(MainActivity mainActivity){
+        this.mainActivity = mainActivity;
         globalVariables = (GlobalVariables) mainActivity.getApplication();
         geocoder = new Geocoder(mainActivity, Locale.getDefault());
         setUpResetButton();
+        setUpSeekBar();
     }
 
     @Override
@@ -91,7 +96,7 @@ class GPSLocation implements LocationListener {
     }
 
     public void moveCameraTo(LatLng latLng){
-        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f));
+        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
     }
 
     public void setUpResetButton(){
@@ -100,6 +105,24 @@ class GPSLocation implements LocationListener {
             globalVariables.getGoogleMap().clear();
             globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
         });
+    }
 
+    public void setUpSeekBar(){
+        globalVariables.getSeekBar_cameraZoom().setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                GlobalVariables.cameraZoomLevel = seekBar.getProgress();
+                Toast.makeText(mainActivity, "Zoom level: " + seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onStartTrackingTouch: " + seekBar.getProgress());
+            }
+        });
     }
 }

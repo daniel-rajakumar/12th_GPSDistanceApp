@@ -3,6 +3,7 @@ package com.example.gps_app;
 import android.app.Application;
 import android.location.Location;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -21,8 +22,11 @@ public class GlobalVariables extends Application {
     private Location currentLocation;
     private GoogleMap googleMap;
     private Map<Location, MyLocation> locationsMap;
-    ToggleButton toggleButton_camera, toggleButton_track;
-    Button button_reset;
+    private ToggleButton toggleButton_camera, toggleButton_track;
+    private Button button_reset;
+    private SeekBar seekBar_cameraZoom;
+    static float cameraZoomLevel = 15;
+
 
     public void setValues(@NonNull MainActivity mainActivity) {
         textView_latLon = mainActivity.findViewById(R.id.textView_latLon);
@@ -32,6 +36,7 @@ public class GlobalVariables extends Application {
         toggleButton_camera = mainActivity.findViewById(R.id.toggleButton_camera);
         toggleButton_track = mainActivity.findViewById(R.id.toggleButton_track);
         button_reset = mainActivity.findViewById(R.id.button_reset);
+        seekBar_cameraZoom = mainActivity.findViewById(R.id.seekBar_cameraZoom);
         locationsMap = new LinkedHashMap<>();
     }
 
@@ -81,5 +86,9 @@ public class GlobalVariables extends Application {
 
     public Button getButton_reset() {
         return button_reset;
+    }
+
+    public SeekBar getSeekBar_cameraZoom() {
+        return seekBar_cameraZoom;
     }
 }

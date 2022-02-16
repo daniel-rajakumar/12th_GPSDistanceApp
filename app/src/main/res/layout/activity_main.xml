@@ -161,5 +161,14 @@
         app:layout_constraintTop_toTopOf="@+id/guideline4"
         app:layout_constraintVertical_bias="0.52" />
 
+    <SeekBar
+        map:id="@+id/seekBar_cameraZoom"
+        map:layout_width="0dp"
+        map:layout_height="wrap_content"
+        android:max="22"
+        app:layout_constraintBottom_toTopOf="@+id/toggleButton_camera"
+        app:layout_constraintEnd_toEndOf="@+id/toggleButton_camera"
+        app:layout_constraintStart_toStartOf="@+id/toggleButton_camera" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
