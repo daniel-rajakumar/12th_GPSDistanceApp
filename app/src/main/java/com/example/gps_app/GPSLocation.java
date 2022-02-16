@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -48,6 +50,7 @@ class GPSLocation implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
+//        updateCameraBearing(location.getBearing());
         Log.d(TAG, "onLocationChanged: (" + location.getLatitude() + ", " + location.getLongitude() + ")");
         try {
             updateGlobalVariables(location);
@@ -124,5 +127,15 @@ class GPSLocation implements LocationListener {
                 Log.d(TAG, "onStartTrackingTouch: " + seekBar.getProgress());
             }
         });
+    }
+
+    private void updateCameraBearing(float bearing) {
+        CameraPosition camPos = CameraPosition
+                .builder(
+                        globalVariables.getGoogleMap().getCameraPosition() // current Camera
+                )
+                .bearing(bearing)
+                .build();
+        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
     }
 }
