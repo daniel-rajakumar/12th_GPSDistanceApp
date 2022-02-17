@@ -51,7 +51,7 @@ class GPSLocation implements LocationListener {
     @Override
     public void onLocationChanged(@NonNull Location location) {
 //        updateCameraBearing(location.getBearing());
-        Log.d(TAG, "onLocationChanged: (" + location.getLatitude() + ", " + location.getLongitude() + ")");
+        Log.d(TAG, "manager: " + location.getLatitude() + ", " + location.getLongitude());
         try {
             updateGlobalVariables(location);
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());

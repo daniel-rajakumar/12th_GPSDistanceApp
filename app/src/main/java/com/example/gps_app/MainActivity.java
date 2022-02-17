@@ -109,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
+//        googleMap.setOnMyLocationChangeListener(location -> {
+//            Log.d(TAG, "map: " + location.getLatitude() + ", " + location.getLongitude());
+//        });
     }
 
     @Override
