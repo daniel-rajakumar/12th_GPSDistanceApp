@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2B2A2A"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="meters"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:uiCompass="true"
+        app:uiZoomControls="true"
+        app:zOrderOnTop="true" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/card_background"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/textView_latLon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(Lat, Lon)"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_location"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textView_location"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/icon_location"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textView_location"
+            app:layout_constraintTop_toBottomOf="@+id/textView_location">
+
+            <TextView
+                android:id="@+id/textView_locationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Name"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+        </HorizontalScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5636115" />
+
+
+    <ToggleButton
+        android:id="@+id/toggleButton_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="Follow"
+        android:textOn="Following"
+        app:layout_constraintBottom_toBottomOf="@+id/toggleButton_track"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton_track"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toggleButton_track"
+        app:layout_constraintVertical_bias="0.36" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton_track"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="Track"
+        android:textOn="Tracking"
+        app:layout_constraintBottom_toBottomOf="@+id/button_reset"
+        app:layout_constraintEnd_toStartOf="@+id/button_reset"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/toggleButton_camera"
+        app:layout_constraintTop_toTopOf="@+id/button_reset"
+        app:layout_constraintVertical_bias="0.52" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <Button
+        map:id="@+id/button_reset"
+        map:layout_width="wrap_content"
+        map:layout_height="wrap_content"
+        map:text="Reset"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/toggleButton_track"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.52" />
+
+    <SeekBar
+        map:id="@+id/seekBar_cameraZoom"
+        map:layout_width="0dp"
+        map:layout_height="wrap_content"
+        android:max="22"
+        app:layout_constraintBottom_toTopOf="@+id/toggleButton_camera"
+        app:layout_constraintEnd_toEndOf="@+id/toggleButton_camera"
+        app:layout_constraintStart_toStartOf="@+id/toggleButton_camera" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

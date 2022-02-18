@@ -2,6 +2,7 @@ package com.example.gps_app;
 
 import android.app.Application;
 import android.location.Location;
+import android.location.LocationManager;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public class GlobalVariables extends Application {
     private Button button_reset;
     private SeekBar seekBar_cameraZoom;
     static float cameraZoomLevel = 15;
+    private GPSLocation locationManager;
 
 
     public void setValues(@NonNull MainActivity mainActivity) {
@@ -92,4 +94,11 @@ public class GlobalVariables extends Application {
         return seekBar_cameraZoom;
     }
 
+    public void setLocationManager(GPSLocation locationManager) {
+        this.locationManager = locationManager;
+    }
+
+    public GPSLocation getLocationManager() {
+        return locationManager;
+    }
 }
