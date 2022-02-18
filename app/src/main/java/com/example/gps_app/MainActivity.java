@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
@@ -52,18 +53,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     void run(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
         assignValues();
+        checkLocationPermission();
         startLocationRequesting();
         createMap();
+    }
+
+    void checkLocationPermission(){
+        checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_FINE_LOCATION);
     }
 
     void startLocationRequesting() {
 //        globalVariables.getTextView_distance().setText("Yes working :) ");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            globalVariables.getTextView_distance().setText("Not working :( ");
+            Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show();
             return;
         }
+        Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
         locationManager.requestLocationUpdates(getBestProvider(), 0, 5, new GPSLocation(this));
     }
+
+    public void checkPermission(String permission, int requestCode) {
+        // Checking if permission is not granted
+        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+        } else {
+            Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     String getBestProvider() {
         Criteria criteria = new Criteria();
@@ -85,13 +104,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        switch (requestCode) {
-            case PERMISSION_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Thank you for the permission", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "This app requires location permission", Toast.LENGTH_SHORT).show();
-                }
+        if (requestCode == PERMISSION_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Thank you for the permission", Toast.LENGTH_SHORT).show();
+                startLocationRequesting();
+            } else {
+                Toast.makeText(this, "This app requires location permission", Toast.LENGTH_SHORT).show();
+            }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
