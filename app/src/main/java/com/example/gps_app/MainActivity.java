@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Address;
@@ -20,6 +21,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationRequest;
+import android.media.VolumeShaper;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,13 +51,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     GlobalVariables globalVariables;
     Bundle savedInstanceState;
+    boolean isLandScape, hasRotated;
+    GPSLocation gpsLocation;
 
     void run(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
+        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        hasRotated = savedInstanceState != null;
+
         assignValues();
-        checkLocationPermission();
+        if (!hasRotated){
+            checkLocationPermission();
+        }
         startLocationRequesting();
         createMap();
+
+
+
+        if (hasRotated){
+            locationManager.removeUpdates(gpsLocation);
+            Toast.makeText(this, "locationManager updated", Toast.LENGTH_SHORT).show();
+        } else {
+
+        }
     }
 
     void checkLocationPermission(){
@@ -69,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show();
             return;
         }
-        Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
-        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, new GPSLocation(this));
+        gpsLocation = new GPSLocation(this);
+        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, gpsLocation);
     }
 
     public void checkPermission(String permission, int requestCode) {
