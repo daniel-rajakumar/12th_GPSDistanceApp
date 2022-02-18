@@ -145,16 +145,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        googleMap.setOnMarkerClickListener(marker -> {
-            MyLocation myLocation = GPSLocation.getMyLocationInfo(this, marker.getPosition());
-            String title = ""
-            + "latest update: " + myLocation.getLastTime()
-            + "\n (" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")";
-
-            Log.d(TAG, "onMapReady: " + title);
-            marker.setSnippet(title);
-            return false;
-        });
+//        googleMap.setOnMarkerClickListener(marker -> {
+//            MyLocation myLocation = GPSLocation.getMyLocationInfo(this, marker.getPosition());
+//            String title = ""
+//            + "latest update: " + myLocation.getLastTime()
+//            + "\n (" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")";
+//
+//            Log.d(TAG, "onMapReady: " + title);
+//            marker.setSnippet(title);
+//            return false;
+//        });
 //        googleMap.setOnMyLocationChangeListener(location -> {
 //            Log.d(TAG, "map: " + location.getLatitude() + ", " + location.getLongitude());
 //        });

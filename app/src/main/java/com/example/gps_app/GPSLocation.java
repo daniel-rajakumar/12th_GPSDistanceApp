@@ -126,7 +126,7 @@ class GPSLocation implements LocationListener {
 //        currentMarker = globalVariables.getGoogleMap().addMarker(markerOptions);
         Marker marker = globalVariables.getGoogleMap().addMarker(markerOptions);
         assert marker != null;
-        marker.setTitle("(" + myLocation.getLastTime() + ", " + myLocation.getLongitude() + ")");
+        marker.setTitle("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
         marker.setSnippet("last visit: " + myLocation.getLastTime() + "\n" +
                     "");
     }
