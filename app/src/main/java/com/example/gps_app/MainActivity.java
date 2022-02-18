@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import android.location.LocationRequest;
 import android.media.VolumeShaper;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -47,8 +49,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int PERMISSION_FINE_LOCATION = 99;
-    public final String TAG = "test";
-    LocationManager locationManager;
+    public final String TAG = "test"; LocationManager locationManager;
     GlobalVariables globalVariables;
     Bundle savedInstanceState;
     boolean isLandScape, hasRotated;
@@ -56,51 +57,56 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void run(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
-        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        hasRotated = savedInstanceState != null;
-
+        globalVariables.setLocationManager(new GPSLocation(this));
         assignValues();
-        if (!hasRotated){
-            checkLocationPermission();
-        }
+        checkLocationPermission();
         startLocationRequesting();
         createMap();
 
+        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        hasRotated = savedInstanceState != null;
 
 
         if (hasRotated){
-            locationManager.removeUpdates(gpsLocation);
-            Toast.makeText(this, "locationManager updated", Toast.LENGTH_SHORT).show();
-        } else {
-
+            locationManager.removeUpdates(globalVariables.getLocationManager());
         }
+
     }
 
     void checkLocationPermission(){
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_FINE_LOCATION);
     }
 
-    void startLocationRequesting() {
-//        globalVariables.getTextView_distance().setText("Yes working :) ");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            globalVariables.getTextView_distance().setText("Not working :( ");
-            Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        gpsLocation = new GPSLocation(this);
-        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, gpsLocation);
-    }
 
     public void checkPermission(String permission, int requestCode) {
-        // Checking if permission is not granted
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         } else {
-            Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Thank you for the permission", Toast.LENGTH_SHORT).show();
+                startLocationRequesting();
+            } else {
+                Toast.makeText(this, "This app requires location permission", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
+    void startLocationRequesting() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, new GPSLocation(this));
+    }
 
     String getBestProvider() {
         Criteria criteria = new Criteria();
@@ -117,20 +123,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     void createMap() {
         globalVariables.getMapView().getMapAsync(this);
         globalVariables.getMapView().onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (requestCode == PERMISSION_FINE_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Thank you for the permission", Toast.LENGTH_SHORT).show();
-                startLocationRequesting();
-            } else {
-                Toast.makeText(this, "This app requires location permission", Toast.LENGTH_SHORT).show();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
@@ -243,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         globalVariables.getMapView().onSaveInstanceState(outState);
+        outState.putParcelable("test", (Parcelable) gpsLocation);
     }
 
     @Override
@@ -250,6 +243,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onLowMemory();
         globalVariables.getMapView().onLowMemory();
     }
+
+
 }
 
 
