@@ -4,23 +4,27 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 class GPSLocation implements LocationListener {
     private static final String TAG = "test";
@@ -29,6 +33,8 @@ class GPSLocation implements LocationListener {
     GlobalVariables globalVariables;
     Location prevLocation;
     MainActivity mainActivity;
+    Marker currentMarker;
+    MyLocation myLocation;
 
 
     GPSLocation(MainActivity mainActivity){
@@ -53,16 +59,16 @@ class GPSLocation implements LocationListener {
 //        updateCameraBearing(location.getBearing());
         Log.d(TAG, "manager: " + location.getLatitude() + ", " + location.getLongitude());
         try {
-            updateGlobalVariables(location);
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             if (globalVariables.getToggleButton_track().isChecked()){
                 updateDistance(location);
+                updateGlobalVariables(location);
+                updateViews(location);
                 addMarkerTo(latLng);
+                if (globalVariables.getToggleButton_camera().isChecked()) {
+                    moveCameraTo(latLng);
+                }
             }
-            if (globalVariables.getToggleButton_camera().isChecked()) {
-                moveCameraTo(latLng);
-            }
-            updateViews(location);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,7 +80,9 @@ class GPSLocation implements LocationListener {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         String locationName = addresses.get(0).getAddressLine(0);
-        MyLocation myLocation = new MyLocation(latitude, longitude, locationName, 0);
+        String lastTime = getTimeStamp(System.currentTimeMillis());
+        Marker marker = currentMarker;
+        myLocation = new MyLocation(latitude, longitude, locationName, 0, lastTime, marker);
         globalVariables.getLocationsMap().put(location, myLocation);
     }
 
@@ -88,14 +96,39 @@ class GPSLocation implements LocationListener {
         globalVariables.getTextView_latLon().setText("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
         globalVariables.getTextView_locationName().setText(myLocation.getLocationName());
         globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
-//        globalVariables.getTextView_distance().setText(myLocation.getLocationName() + "");
+        globalVariables.getTextView_distance().setText(
+//                getTimeStamp(System.currentTimeMillis()) +
+                myLocation.getLastTime()
+                + "");
         globalVariables.setCurrentLocation(location);
+    }
+
+    public static String getTimeStamp(long milliSecond){
+        return new SimpleDateFormat("h:mm:ss a", Locale.getDefault())
+                    .format(new Date(milliSecond));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static MyLocation getMyLocationInfo(MainActivity mainActivity, LatLng latLng){
+        GlobalVariables globalVariables = (GlobalVariables) mainActivity.getApplication();
+        for (Map.Entry<Location, MyLocation> entry: globalVariables.getLocationsMap().entrySet()){
+            if (latLng.latitude  == entry.getKey().getLatitude()
+             && latLng.longitude == entry.getKey().getLongitude()){
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     public void addMarkerTo(LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        globalVariables.getGoogleMap().addMarker(markerOptions);
+//        currentMarker = globalVariables.getGoogleMap().addMarker(markerOptions);
+        Marker marker = globalVariables.getGoogleMap().addMarker(markerOptions);
+        assert marker != null;
+        marker.setTitle("(" + myLocation.getLastTime() + ", " + myLocation.getLongitude() + ")");
+        marker.setSnippet("last visit: " + myLocation.getLastTime() + "\n" +
+                    "");
     }
 
     public void moveCameraTo(LatLng latLng){

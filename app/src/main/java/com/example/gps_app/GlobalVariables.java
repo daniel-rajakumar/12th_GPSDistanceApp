@@ -91,4 +91,5 @@ public class GlobalVariables extends Application {
     public SeekBar getSeekBar_cameraZoom() {
         return seekBar_cameraZoom;
     }
+
 }
