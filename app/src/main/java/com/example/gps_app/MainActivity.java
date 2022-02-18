@@ -62,27 +62,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_FINE_LOCATION);
     }
 
-    void startLocationRequesting() {
-//        globalVariables.getTextView_distance().setText("Yes working :) ");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            globalVariables.getTextView_distance().setText("Not working :( ");
-            Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
-        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, new GPSLocation(this));
-    }
 
     public void checkPermission(String permission, int requestCode) {
-        // Checking if permission is not granted
-        if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{permission}, requestCode);
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         } else {
-            Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Thank you for the permission", Toast.LENGTH_SHORT).show();
+                startLocationRequesting();
+            } else {
+                Toast.makeText(this, "This app requires location permission", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
+    void startLocationRequesting() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, new GPSLocation(this));
+    }
 
     String getBestProvider() {
         Criteria criteria = new Criteria();
@@ -99,20 +107,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     void createMap() {
         globalVariables.getMapView().getMapAsync(this);
         globalVariables.getMapView().onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (requestCode == PERMISSION_FINE_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Thank you for the permission", Toast.LENGTH_SHORT).show();
-                startLocationRequesting();
-            } else {
-                Toast.makeText(this, "This app requires location permission", Toast.LENGTH_SHORT).show();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
