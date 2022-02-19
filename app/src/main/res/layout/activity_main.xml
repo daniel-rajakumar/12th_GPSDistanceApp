@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:map="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -150,10 +149,10 @@
         app:layout_constraintGuide_percent="0.9" />
 
     <Button
-        map:id="@+id/button_reset"
-        map:layout_width="wrap_content"
-        map:layout_height="wrap_content"
-        map:text="Reset"
+        android:id="@+id/button_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -162,9 +161,9 @@
         app:layout_constraintVertical_bias="0.52" />
 
     <SeekBar
-        map:id="@+id/seekBar_cameraZoom"
-        map:layout_width="0dp"
-        map:layout_height="wrap_content"
+        android:id="@+id/seekBar_cameraZoom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:max="22"
         app:layout_constraintBottom_toTopOf="@+id/toggleButton_camera"
         app:layout_constraintEnd_toEndOf="@+id/toggleButton_camera"
