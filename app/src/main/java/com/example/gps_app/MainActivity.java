@@ -49,7 +49,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int PERMISSION_FINE_LOCATION = 99;
-    public final String TAG = "test"; LocationManager locationManager;
+    public final String TAG = "test";
+    LocationManager locationManager;
     GlobalVariables globalVariables;
     Bundle savedInstanceState;
     boolean isLandScape, hasRotated;
@@ -57,20 +58,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void run(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
-        globalVariables.setLocationManager(new GPSLocation(this));
-        assignValues();
-        checkLocationPermission();
-        startLocationRequesting();
-        createMap();
-
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         hasRotated = savedInstanceState != null;
 
+        assignValues();
+        if (!hasRotated){
+            checkLocationPermission();
+        }
+        startLocationRequesting();
+        createMap();
 
         if (hasRotated){
-            locationManager.removeUpdates(globalVariables.getLocationManager());
+            locationManager.removeUpdates(gpsLocation);
+            Toast.makeText(this, "locationManager updated", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     void checkLocationPermission(){
@@ -105,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, new GPSLocation(this));
+        gpsLocation = new GPSLocation(this);
+        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, gpsLocation);
     }
 
     String getBestProvider() {
@@ -235,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         globalVariables.getMapView().onSaveInstanceState(outState);
-        outState.putParcelable("test", (Parcelable) gpsLocation);
     }
 
     @Override
