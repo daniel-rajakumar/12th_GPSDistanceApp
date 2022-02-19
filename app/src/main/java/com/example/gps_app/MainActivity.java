@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void run(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
-        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        hasRotated = savedInstanceState != null;
-
         assignValues();
         if (!hasRotated){
             checkLocationPermission();
@@ -117,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void assignValues() {
+        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        hasRotated = savedInstanceState != null;
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         globalVariables = (GlobalVariables) this.getApplication();
         globalVariables.setValues(this);
@@ -175,30 +174,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return info;
             }
         });
-
-//        googleMap.setOnMarkerClickListener(marker -> {
-//            MyLocation myLocation = GPSLocation.getMyLocationInfo(this, marker.getPosition());
-//            String title = ""
-//            + "latest update: " + myLocation.getLastTime()
-//            + "\n (" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")";
-//
-//            Log.d(TAG, "onMapReady: " + title);
-//            marker.setSnippet(title);
-//            return false;
-//        });
-//        googleMap.setOnMyLocationChangeListener(location -> {
-//            Log.d(TAG, "map: " + location.getLatitude() + ", " + location.getLongitude());
-//        });
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
     }
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
