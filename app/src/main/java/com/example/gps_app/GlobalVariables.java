@@ -31,8 +31,8 @@ public class GlobalVariables extends Application {
 
 
     public void setValues(@NonNull MainActivity mainActivity) {
-        textView_latLon = mainActivity.findViewById(R.id.textView_latLon);
-        textView_locationName = mainActivity.findViewById(R.id.textView_locationName);
+        textView_latLon = mainActivity.findViewById(R.id.textView_location3);
+        textView_locationName = mainActivity.findViewById(R.id.textView_location2);
         textView_distance = mainActivity.findViewById(R.id.textView_distance);
         mapView = mainActivity.findViewById(R.id.mapView);
         toggleButton_camera = mainActivity.findViewById(R.id.toggleButton_camera);

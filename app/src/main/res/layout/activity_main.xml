@@ -24,14 +24,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_height="0dp"
         android:background="@drawable/card_background"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar_cameraZoom"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+        app:layout_constraintTop_toTopOf="@+id/guideline5">
 
         <TextView
             android:id="@+id/textView_distance3"
@@ -96,16 +95,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_height="0dp"
         android:background="@drawable/card_background"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/mapView"
+        app:layout_constraintVertical_chainStyle="spread">
 
         <TextView
             android:id="@+id/textView_location3"
@@ -168,58 +165,46 @@
         </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5636115" />
-
 
     <ToggleButton
         android:id="@+id/toggleButton_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:textOff="Follow"
         android:textOn="Following"
+        android:background="@drawable/togglebutton_background"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/toggleButton_track"
         app:layout_constraintEnd_toStartOf="@+id/toggleButton_track"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toggleButton_track"
-        app:layout_constraintVertical_bias="0.36" />
+        app:layout_constraintVertical_bias="0.50" />
 
     <ToggleButton
         android:id="@+id/toggleButton_track"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:textOff="Track"
         android:textOn="Tracking"
+        android:background="@drawable/togglebutton_background"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/button_reset"
         app:layout_constraintEnd_toStartOf="@+id/button_reset"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/toggleButton_camera"
-        app:layout_constraintTop_toTopOf="@+id/button_reset"
-        app:layout_constraintVertical_bias="0.52" />
+        app:layout_constraintTop_toTopOf="@+id/button_reset" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
-
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_reset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:text="Reset"
+        android:textColor="@color/white"
+        android:background="@drawable/button_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/toggleButton_track"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
-        app:layout_constraintVertical_bias="0.52" />
+        app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
     <SeekBar
         android:id="@+id/seekBar_cameraZoom"
@@ -227,8 +212,29 @@
         android:layout_height="wrap_content"
         android:max="22"
         app:layout_constraintBottom_toTopOf="@+id/toggleButton_camera"
-        app:layout_constraintEnd_toEndOf="@+id/toggleButton_camera"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/toggleButton_camera" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5636115" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9015048" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.73" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
