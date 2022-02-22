@@ -49,8 +49,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
-            motion:layout_constraintEnd_toStartOf="@+id/constraintLayout3"
-            motion:layout_constraintBottom_toBottomOf="parent" />
+            motion:layout_constraintTop_toTopOf="@id/guideline2" />
         <Constraint
             android:id="@+id/constraintLayout3"
             motion:layout_constraintEnd_toEndOf="parent"
@@ -59,10 +58,11 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
             motion:layout_constraintBottom_toTopOf="@+id/seekBar_cameraZoom"
             motion:layout_constraintHorizontal_bias="0.5"
             android:visibility="visible"
-            motion:layout_constraintStart_toEndOf="@+id/constraintLayout2"
+            motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toBottomOf="@+id/mapView" />
         <Constraint
             android:layout_height="wrap_content"
