@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2B2A2A"
+    app:layoutDescription="@xml/activity_main_scene2"
     tools:context=".MainActivity">
 
     <com.google.android.gms.maps.MapView
@@ -172,10 +173,10 @@
         android:id="@+id/toggleButton_camera"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textOff="Follow"
-        android:textOn="Following"
         android:background="@drawable/togglebutton_background"
         android:textColor="@color/white"
+        android:textOff="Follow"
+        android:textOn="Following"
         app:layout_constraintBottom_toBottomOf="@+id/toggleButton_track"
         app:layout_constraintEnd_toStartOf="@+id/toggleButton_track"
         app:layout_constraintHorizontal_bias="0.5"
@@ -187,10 +188,10 @@
         android:id="@+id/toggleButton_track"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textOff="Track"
-        android:textOn="Tracking"
         android:background="@drawable/togglebutton_background"
         android:textColor="@color/white"
+        android:textOff="Track"
+        android:textOn="Tracking"
         app:layout_constraintBottom_toBottomOf="@+id/button_reset"
         app:layout_constraintEnd_toStartOf="@+id/button_reset"
         app:layout_constraintStart_toEndOf="@+id/toggleButton_camera"
@@ -200,9 +201,9 @@
         android:id="@+id/button_reset"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/button_background"
         android:text="Reset"
         android:textColor="@color/white"
-        android:background="@drawable/button_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/toggleButton_track"
@@ -226,14 +227,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5636115" />
+        app:layout_constraintGuide_percent="0.55" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.92" />
+        app:layout_constraintGuide_percent="0.9206566" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -250,4 +251,4 @@
         app:layout_constraintGuide_percent="0.71" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
