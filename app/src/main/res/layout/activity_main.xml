@@ -211,6 +211,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:max="22"
+        android:progressDrawable="@drawable/seekbar_background"
+        android:thumb="@drawable/seekbar_foreground"
         app:layout_constraintBottom_toTopOf="@+id/toggleButton_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/toggleButton_camera" />
