@@ -42,7 +42,6 @@ class GPSLocation implements LocationListener {
     double distance = 0;
     Geocoder geocoder;
     GlobalVariables globalVariables;
-    Location prevLocation;
     MainActivity mainActivity;
     Marker currentMarker;
     MyLocation myLocation;
@@ -73,21 +72,20 @@ class GPSLocation implements LocationListener {
 //        updateCameraBearing(location.getBearing());
         Log.d(TAG, "manager: " + location.getLatitude() + ", " + location.getLongitude());
         try {
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             if (globalVariables.getToggleButton_track().isChecked()){
                 updateDistance(location);
                 updateGlobalVariables(location);
                 updateViews(location);
-                addMarkerTo(latLng);
+                addMarkerTo(globalVariables.getPreviousLocation());
                 if (globalVariables.getToggleButton_camera().isChecked()) {
-                    moveCameraTo(latLng);
+                    moveCameraTo(location);
                 }
                 drawPrimaryLinePath(globalVariables.getLocationsMap().keySet());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        prevLocation = location;
+        globalVariables.setPreviousLocation(location);
     }
 
     public void updateGlobalVariables(Location location) throws IOException {
@@ -111,8 +109,8 @@ class GPSLocation implements LocationListener {
     }
 
     public void updateDistance(Location location){
-        if (prevLocation != null)
-            MyLocation.addDistance(location.distanceTo(prevLocation));
+        if (globalVariables.getPreviousLocation() != null)
+            MyLocation.addDistance(location.distanceTo(globalVariables.getPreviousLocation()));
     }
 
     public void updateViews(Location location) throws IOException {
@@ -144,9 +142,10 @@ class GPSLocation implements LocationListener {
         return null;
     }
 
-    public void addMarkerTo(LatLng latLng){
+    public void addMarkerTo(Location location){
+        if (location == null) return;
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
+        markerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
 //        currentMarker = globalVariables.getGoogleMap().addMarker(markerOptions);
         Marker marker = globalVariables.getGoogleMap().addMarker(markerOptions);
         assert marker != null;
@@ -155,7 +154,8 @@ class GPSLocation implements LocationListener {
                     "");
     }
 
-    public void moveCameraTo(LatLng latLng){
+    public void moveCameraTo(Location location){
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
     }
 
@@ -170,12 +170,10 @@ class GPSLocation implements LocationListener {
     public void setUpSeekBar(){
         globalVariables.getSeekBar_cameraZoom().setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -196,7 +194,7 @@ class GPSLocation implements LocationListener {
         globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
     }
 
-    private void drawPrimaryLinePath(Set<Location> listLocsToDraw ) {
+    private void drawPrimaryLinePath(Set<Location> listLocsToDraw) {
         if (globalVariables.getGoogleMap() == null) return;
         if (listLocsToDraw.size() < 2) return;
 
@@ -224,7 +222,8 @@ class GPSLocation implements LocationListener {
                     long elapsedSeconds = elapsedTime / 1000;
                     long elapsedMinutes = elapsedSeconds / 60;
                     long elapsedHour = elapsedMinutes / 60;
-                    globalVariables.getTextView_duration().setText(String.format("Timer: %s:%s:%s", elapsedHour,elapsedMinutes, elapsedSeconds));
+                    globalVariables.getTextView_duration().setText(String.format("Timer: %s:%s:%s", elapsedHour, elapsedMinutes, elapsedSeconds % 60));
+//                    globalVariables.getTextView_duration().setText(getTimeStamp(elapsedTime, "hh:mm:ss"));
                     globalVariables.setElapsedTime(elapsedTime);
                 });
             }

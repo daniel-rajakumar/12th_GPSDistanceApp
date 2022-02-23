@@ -21,7 +21,7 @@ public class GlobalVariables extends Application {
 
     private TextView textView_latLon, textView_locationName, textView_distance, textView_duration;
     private MapView mapView;
-    private Location currentLocation;
+    private Location currentLocation, previousLocation;
     private GoogleMap googleMap;
     private Map<Location, MyLocation> locationsMap;
     private ToggleButton toggleButton_camera, toggleButton_track;
@@ -75,6 +75,14 @@ public class GlobalVariables extends Application {
 
     public void setCurrentLocation(Location currentLocation) {
         this.currentLocation = currentLocation;
+    }
+
+    public void setPreviousLocation(Location previousLocation) {
+        this.previousLocation = previousLocation;
+    }
+
+    public Location getPreviousLocation() {
+        return previousLocation;
     }
 
     public MapView getMapView() {
