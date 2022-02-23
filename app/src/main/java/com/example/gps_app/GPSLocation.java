@@ -1,19 +1,15 @@
 package com.example.gps_app;
 
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,21 +20,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 class GPSLocation implements LocationListener {
     private static final String TAG = "test";
@@ -48,6 +37,7 @@ class GPSLocation implements LocationListener {
     MainActivity mainActivity;
     Marker currentMarker;
     Map.Entry<Location, MyLocation> oldLocation;
+    MyLocation myLocation;
 
 
     GPSLocation(MainActivity mainActivity){
@@ -112,13 +102,13 @@ class GPSLocation implements LocationListener {
 
 
     public void removeOldLocation(Location previousLocation){
-        if ((oldLocation = getOldLocationEntry(previousLocation)) != null){
+        if ((oldLocation = getLocationEntry(previousLocation)) != null){
             oldLocation.getValue().getMarker().remove();
             globalVariables.getLocationsMap().remove(oldLocation.getKey());
         }
     }
 
-    public Map.Entry<Location, MyLocation> getOldLocationEntry(Location location){
+    public Map.Entry<Location, MyLocation> getLocationEntry(Location location){
         for (Map.Entry<Location, MyLocation> entry: globalVariables.getLocationsMap().entrySet()){
             if (entry.getKey().getLatitude()  == location.getLatitude()
              && entry.getKey().getLongitude() == location.getLongitude()){
@@ -150,20 +140,7 @@ class GPSLocation implements LocationListener {
                     .format(new Date(milliSecond));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public static MyLocation getMyLocationInfo(MainActivity mainActivity, LatLng latLng){
-        GlobalVariables globalVariables = (GlobalVariables) mainActivity.getApplication();
-        for (Map.Entry<Location, MyLocation> entry: globalVariables.getLocationsMap().entrySet()){
-            if (latLng.latitude  == entry.getKey().getLatitude()
-             && latLng.longitude == entry.getKey().getLongitude()){
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
     public void addMarkerTo(@NonNull Location location){
-        MyLocation myLocation;
         Marker marker;
         MarkerOptions markerOptions = new MarkerOptions();
 
@@ -179,8 +156,6 @@ class GPSLocation implements LocationListener {
     }
 
     public void updateDurationTo(@NonNull Location previousLocation){
-        MyLocation myLocation;
-
         if ((myLocation = globalVariables.getLocationsMap().get(previousLocation)) == null) return;
         long time = System.currentTimeMillis() - myLocation.getStartTime();
 
