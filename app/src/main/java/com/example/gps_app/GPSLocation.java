@@ -44,7 +44,6 @@ class GPSLocation implements LocationListener {
     GlobalVariables globalVariables;
     MainActivity mainActivity;
     Marker currentMarker;
-    MyLocation myLocation;
 
 
     GPSLocation(MainActivity mainActivity){
@@ -76,16 +75,19 @@ class GPSLocation implements LocationListener {
                 updateDistance(location);
                 updateGlobalVariables(location);
                 updateViews(location);
-                addMarkerTo(globalVariables.getPreviousLocation());
+                if (globalVariables.getPreviousLocation() != null){
+                    updateDurationTo(globalVariables.getPreviousLocation());
+                    addMarkerTo(globalVariables.getPreviousLocation());
+                }
                 if (globalVariables.getToggleButton_camera().isChecked()) {
                     moveCameraTo(location);
                 }
                 drawPrimaryLinePath(globalVariables.getLocationsMap().keySet());
+                globalVariables.setPreviousLocation(location);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        globalVariables.setPreviousLocation(location);
     }
 
     public void updateGlobalVariables(Location location) throws IOException {
@@ -93,18 +95,12 @@ class GPSLocation implements LocationListener {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         String locationName = addresses.get(0).getAddressLine(0);
-        String lastTime = getTimeStamp(System.currentTimeMillis(), "h:mm:ss a");
+//        String startTime = getTimeStamp(System.currentTimeMillis(), "h:mm:ss a");
+        long startTime = System.currentTimeMillis();
         Marker marker = currentMarker;
         long timeSpend;
 
-        if (globalVariables.getLocationsMap().get(location) == null){
-            timeSpend = 0;
-        } else {
-
-        }
-
-
-        myLocation = new MyLocation(latitude, longitude, locationName, 0, lastTime, marker);
+        MyLocation myLocation = new MyLocation(latitude, longitude, locationName, startTime, marker);
         globalVariables.getLocationsMap().put(location, myLocation);
     }
 
@@ -149,9 +145,16 @@ class GPSLocation implements LocationListener {
 //        currentMarker = globalVariables.getGoogleMap().addMarker(markerOptions);
         Marker marker = globalVariables.getGoogleMap().addMarker(markerOptions);
         assert marker != null;
+        MyLocation myLocation = globalVariables.getLocationsMap().get(globalVariables.getPreviousLocation());
         marker.setTitle("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
-        marker.setSnippet("last visit: " + myLocation.getLastTime() + "\n" +
-                    "");
+        marker.setSnippet("last visit: " + getTimeStamp(myLocation.getStartTime(), "h:mm:ss a") + "\n" +
+                          "Time spend: " + getTimeStamp(myLocation.getTimeSpend(), "mm:ss"));
+    }
+
+    public void updateDurationTo(Location location){
+        if (location == null) return;
+        long time = System.currentTimeMillis() - globalVariables.getLocationsMap().get(location).getStartTime();
+        globalVariables.getLocationsMap().get(location).setTimeSpend(time);
     }
 
     public void moveCameraTo(Location location){

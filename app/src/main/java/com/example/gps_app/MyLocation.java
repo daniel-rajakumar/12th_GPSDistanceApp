@@ -1,22 +1,24 @@
 package com.example.gps_app;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.Marker;
 
 public class MyLocation {
+    private static final String TAG = "test2";
     private final double latitude, longitude;
     private final String locationName;
-    private final double timeSpend;
+    private long timeSpend;
     private static float distanceTraveled;
-    private String lastTime;
+    private long startTime;
     private Marker marker;
 
-    public MyLocation(double latitude, double longitude, String locationName, double timeSpend,
-                      String lastTime, Marker marker) {
+    public MyLocation(double latitude, double longitude, String locationName,
+                      long startTime, Marker marker) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.locationName = locationName;
-        this.timeSpend = timeSpend;
-        this.lastTime = lastTime;
+        this.startTime = startTime;
         this.marker = marker;
     }
 
@@ -33,7 +35,7 @@ public class MyLocation {
         return locationName;
     }
 
-    public double getTimeSpend() {
+    public long getTimeSpend() {
         return timeSpend;
     }
 
@@ -49,12 +51,16 @@ public class MyLocation {
         distanceTraveled = 0;
     }
 
-    public String getLastTime() {
-        return lastTime;
+    public long getStartTime() {
+        return startTime;
     }
 
     public Marker getMarker() {
         return marker;
     }
 
+    public void setTimeSpend(long timeSpend) {
+        Log.d(TAG, "setTimeSpend: " + timeSpend);
+        this.timeSpend = timeSpend;
+    }
 }
