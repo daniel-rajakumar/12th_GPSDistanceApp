@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void checkPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            ActivityCompat.requestPermissions(this, new String[]{ permission }, requestCode);
         } else {
             Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
         }

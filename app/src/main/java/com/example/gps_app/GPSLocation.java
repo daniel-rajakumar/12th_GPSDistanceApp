@@ -1,5 +1,6 @@
 package com.example.gps_app;
 
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -12,19 +13,23 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 class GPSLocation implements LocationListener {
     private static final String TAG = "test";
@@ -70,6 +75,7 @@ class GPSLocation implements LocationListener {
                 if (globalVariables.getToggleButton_camera().isChecked()) {
                     moveCameraTo(latLng);
                 }
+                drawPrimaryLinePath(globalVariables.getLocationsMap().keySet());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,5 +178,26 @@ class GPSLocation implements LocationListener {
                 .bearing(bearing)
                 .build();
         globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
+    }
+
+    private void drawPrimaryLinePath(Set<Location> listLocsToDraw ) {
+        if (globalVariables.getGoogleMap() == null)
+            return;
+
+        if (listLocsToDraw.size() < 2)
+            return;
+
+        PolylineOptions options = new PolylineOptions();
+
+        options.color(ContextCompat.getColor(mainActivity, R.color.trackingColor));
+        options.width(10);
+        options.visible(true);
+
+        for (Location locRecorded: listLocsToDraw) {
+            options.add(new LatLng(locRecorded.getLatitude(), locRecorded.getLongitude()));
+        }
+
+        globalVariables.getGoogleMap().addPolyline(options);
+
     }
 }
