@@ -181,11 +181,8 @@ class GPSLocation implements LocationListener {
     }
 
     private void drawPrimaryLinePath(Set<Location> listLocsToDraw ) {
-        if (globalVariables.getGoogleMap() == null)
-            return;
-
-        if (listLocsToDraw.size() < 2)
-            return;
+        if (globalVariables.getGoogleMap() == null) return;
+        if (listLocsToDraw.size() < 2) return;
 
         PolylineOptions options = new PolylineOptions();
 
@@ -198,6 +195,5 @@ class GPSLocation implements LocationListener {
         }
 
         globalVariables.getGoogleMap().addPolyline(options);
-
     }
 }
