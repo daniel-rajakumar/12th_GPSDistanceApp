@@ -112,26 +112,20 @@ class GPSLocation implements LocationListener {
 
 
     public void removeOldLocation(Location previousLocation){
-        oldLocation = getOldLocationEntry(previousLocation);
-
-        if (oldLocation != null){
+        if ((oldLocation = getOldLocationEntry(previousLocation)) != null){
             oldLocation.getValue().getMarker().remove();
             globalVariables.getLocationsMap().remove(oldLocation.getKey());
         }
     }
 
     public Map.Entry<Location, MyLocation> getOldLocationEntry(Location location){
-        int count = 0;
-        Map.Entry<Location, MyLocation> _entry = null;
         for (Map.Entry<Location, MyLocation> entry: globalVariables.getLocationsMap().entrySet()){
             if (entry.getKey().getLatitude()  == location.getLatitude()
              && entry.getKey().getLongitude() == location.getLongitude()){
-                count++;
-                _entry = entry;
+                return entry;
             }
         }
-//        Log.d(TAG + "5", "getOldLocationEntry: count -> " + count);
-        return _entry;
+        return null;
     }
 
     public void updateDistance(Location location){
@@ -168,42 +162,32 @@ class GPSLocation implements LocationListener {
         return null;
     }
 
-    public void addMarkerTo(Location location){
-        if (location == null) return;
+    public void addMarkerTo(@NonNull Location location){
+        MyLocation myLocation;
+        Marker marker;
         MarkerOptions markerOptions = new MarkerOptions();
+
         markerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-//        currentMarker = globalVariables.getGoogleMap().addMarker(markerOptions);
-        Marker marker = globalVariables.getGoogleMap().addMarker(markerOptions);
-        assert marker != null;
-        MyLocation myLocation = globalVariables.getLocationsMap().get(globalVariables.getPreviousLocation());
+
+        if ((marker = globalVariables.getGoogleMap().addMarker(markerOptions)) == null) return;
+        if ((myLocation = globalVariables.getLocationsMap().get(location)) == null) return;
+
         marker.setTitle("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
         marker.setSnippet("last visit: " + getTimeStamp(myLocation.getStartTime(), "h:mm:ss a") + "\n" +
                           "Time spend: " + getTimeStamp(myLocation.getTimeSpend(), "mm:ss"));
-        globalVariables.getLocationsMap().get(location).setMarker(marker);
+        myLocation.setMarker(marker);
     }
 
-    public void updateDurationTo(Location previousLocation){
-        if (previousLocation == null) return;
-        MyLocation myLocation = globalVariables.getLocationsMap().get(previousLocation);
-        if (oldLocation == null){
-            assert myLocation != null;
-            long time = System.currentTimeMillis() - myLocation.getStartTime();
-            globalVariables.getLocationsMap().get(previousLocation).setTimeSpend(time);
-            return;
-        }
-        MyLocation myLocation_old = oldLocation.getValue();
-        if (myLocation == null) return;
+    public void updateDurationTo(@NonNull Location previousLocation){
+        MyLocation myLocation;
+
+        if ((myLocation = globalVariables.getLocationsMap().get(previousLocation)) == null) return;
         long time = System.currentTimeMillis() - myLocation.getStartTime();
 
-        if (myLocation_old != null){
-            time += myLocation_old.getTimeSpend();
-            Log.d(TAG + "5", String.format("%s - (%s, %s)", getTimeStamp(myLocation_old.getTimeSpend(), "mm:ss"), myLocation_old.getLatitude(), myLocation_old.getLongitude()));
-        }
+        if (oldLocation != null)
+            time += oldLocation.getValue().getTimeSpend();
 
-        if (myLocation != null){
-            globalVariables.getLocationsMap().get(previousLocation).setTimeSpend(time);
-            Log.d(TAG + "5", String.format(" previous location -> %s", globalVariables.getLocationsMap().get(previousLocation).getTimeSpend()));
-        }
+        myLocation.setTimeSpend(time);
     }
 
     public void moveCameraTo(Location location){
