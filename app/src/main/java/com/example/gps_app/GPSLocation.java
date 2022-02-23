@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,18 +111,27 @@ class GPSLocation implements LocationListener {
     }
 
 
-    public void removeOldLocation(Location location){
-        for (Map.Entry<Location, MyLocation> entry: globalVariables.getLocationsMap().entrySet()){
-            if (entry.getKey().getLatitude() == location.getLatitude()
-             && entry.getKey().getLongitude() == location.getLongitude()){
-                oldLocation = entry;
-            }
-        }
+    public void removeOldLocation(Location previousLocation){
+        oldLocation = getOldLocationEntry(previousLocation);
 
         if (oldLocation != null){
-            globalVariables.getLocationsMap().get(oldLocation.getKey()).getMarker().remove();
+            oldLocation.getValue().getMarker().remove();
             globalVariables.getLocationsMap().remove(oldLocation.getKey());
         }
+    }
+
+    public Map.Entry<Location, MyLocation> getOldLocationEntry(Location location){
+        int count = 0;
+        Map.Entry<Location, MyLocation> _entry = null;
+        for (Map.Entry<Location, MyLocation> entry: globalVariables.getLocationsMap().entrySet()){
+            if (entry.getKey().getLatitude()  == location.getLatitude()
+             && entry.getKey().getLongitude() == location.getLongitude()){
+                count++;
+                _entry = entry;
+            }
+        }
+//        Log.d(TAG + "5", "getOldLocationEntry: count -> " + count);
+        return _entry;
     }
 
     public void updateDistance(Location location){
@@ -171,13 +182,28 @@ class GPSLocation implements LocationListener {
         globalVariables.getLocationsMap().get(location).setMarker(marker);
     }
 
-    public void updateDurationTo(Location location){
-        if (location == null) return;
-        long time = System.currentTimeMillis() - globalVariables.getLocationsMap().get(location).getStartTime();
-        if (oldLocation != null){
-            time += oldLocation.getValue().getTimeSpend();
+    public void updateDurationTo(Location previousLocation){
+        if (previousLocation == null) return;
+        MyLocation myLocation = globalVariables.getLocationsMap().get(previousLocation);
+        if (oldLocation == null){
+            assert myLocation != null;
+            long time = System.currentTimeMillis() - myLocation.getStartTime();
+            globalVariables.getLocationsMap().get(previousLocation).setTimeSpend(time);
+            return;
         }
-        globalVariables.getLocationsMap().get(location).setTimeSpend(time);
+        MyLocation myLocation_old = oldLocation.getValue();
+        if (myLocation == null) return;
+        long time = System.currentTimeMillis() - myLocation.getStartTime();
+
+        if (myLocation_old != null){
+            time += myLocation_old.getTimeSpend();
+            Log.d(TAG + "5", String.format("%s - (%s, %s)", getTimeStamp(myLocation_old.getTimeSpend(), "mm:ss"), myLocation_old.getLatitude(), myLocation_old.getLongitude()));
+        }
+
+        if (myLocation != null){
+            globalVariables.getLocationsMap().get(previousLocation).setTimeSpend(time);
+            Log.d(TAG + "5", String.format(" previous location -> %s", globalVariables.getLocationsMap().get(previousLocation).getTimeSpend()));
+        }
     }
 
     public void moveCameraTo(Location location){
@@ -186,15 +212,7 @@ class GPSLocation implements LocationListener {
     }
 
     public void setUpResetButton(){
-        globalVariables.getButton_reset().setOnClickListener(v -> {
-            MyLocation.resetDistance();
-            globalVariables.getGoogleMap().clear();
-            globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
-            globalVariables.getLocationsMap().clear();
-            globalVariables.setPreviousLocation(null);
-            globalVariables.setStartTime(System.currentTimeMillis());
-            globalVariables.setElapsedTime(0);
-        });
+        globalVariables.getButton_reset().setOnClickListener(v -> globalVariables.resetValues());
     }
 
     public void setUpSeekBar(){

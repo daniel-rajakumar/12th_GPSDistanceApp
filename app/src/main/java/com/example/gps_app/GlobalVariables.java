@@ -144,4 +144,14 @@ public class GlobalVariables extends Application {
     public long getElapsedTime() {
         return elapsedTime;
     }
+
+    public void resetValues(){
+        MyLocation.resetDistance();
+        googleMap.clear();
+        locationsMap.clear();
+        previousLocation = null;
+        startTime = System.currentTimeMillis();
+        elapsedTime = 0;
+        textView_distance.setText("0 meters");
+    }
 }
