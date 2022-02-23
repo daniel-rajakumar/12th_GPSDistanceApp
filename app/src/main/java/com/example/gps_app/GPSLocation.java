@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,6 +45,7 @@ class GPSLocation implements LocationListener {
     GlobalVariables globalVariables;
     MainActivity mainActivity;
     Marker currentMarker;
+    Map.Entry<Location, MyLocation> oldLocation;
 
 
     GPSLocation(MainActivity mainActivity){
@@ -95,13 +97,30 @@ class GPSLocation implements LocationListener {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         String locationName = addresses.get(0).getAddressLine(0);
-//        String startTime = getTimeStamp(System.currentTimeMillis(), "h:mm:ss a");
         long startTime = System.currentTimeMillis();
         Marker marker = currentMarker;
-        long timeSpend;
-
         MyLocation myLocation = new MyLocation(latitude, longitude, locationName, startTime, marker);
+
+        removeOldLocation(location);
         globalVariables.getLocationsMap().put(location, myLocation);
+
+        Log.d(TAG + "3", "updateGlobalVariables: " + globalVariables.getLocationsMap().size() + " -> " + globalVariables.getLocationsMap());
+//        Log.d(TAG + "3", "updateGlobalVariables: " + oldLocation + " -> ");
+    }
+
+
+    public void removeOldLocation(Location location){
+        for (Map.Entry<Location, MyLocation> entry: globalVariables.getLocationsMap().entrySet()){
+            if (entry.getKey().getLatitude() == location.getLatitude()
+             && entry.getKey().getLongitude() == location.getLongitude()){
+                oldLocation = entry;
+            }
+        }
+
+        if (oldLocation != null){
+            globalVariables.getLocationsMap().get(oldLocation.getKey()).getMarker().remove();
+            globalVariables.getLocationsMap().remove(oldLocation.getKey());
+        }
     }
 
     public void updateDistance(Location location){
@@ -149,11 +168,15 @@ class GPSLocation implements LocationListener {
         marker.setTitle("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
         marker.setSnippet("last visit: " + getTimeStamp(myLocation.getStartTime(), "h:mm:ss a") + "\n" +
                           "Time spend: " + getTimeStamp(myLocation.getTimeSpend(), "mm:ss"));
+        globalVariables.getLocationsMap().get(location).setMarker(marker);
     }
 
     public void updateDurationTo(Location location){
         if (location == null) return;
         long time = System.currentTimeMillis() - globalVariables.getLocationsMap().get(location).getStartTime();
+        if (oldLocation != null){
+            time += oldLocation.getValue().getTimeSpend();
+        }
         globalVariables.getLocationsMap().get(location).setTimeSpend(time);
     }
 
@@ -167,6 +190,10 @@ class GPSLocation implements LocationListener {
             MyLocation.resetDistance();
             globalVariables.getGoogleMap().clear();
             globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
+            globalVariables.getLocationsMap().clear();
+            globalVariables.setPreviousLocation(null);
+            globalVariables.setStartTime(System.currentTimeMillis());
+            globalVariables.setElapsedTime(0);
         });
     }
 

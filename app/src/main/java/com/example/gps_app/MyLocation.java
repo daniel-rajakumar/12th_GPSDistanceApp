@@ -59,8 +59,13 @@ public class MyLocation {
         return marker;
     }
 
+    public void setMarker(Marker marker) {
+        this.marker = marker;
+    }
+
     public void setTimeSpend(long timeSpend) {
         Log.d(TAG, "setTimeSpend: " + timeSpend);
         this.timeSpend = timeSpend;
     }
+
 }
