@@ -41,8 +41,10 @@ class GPSLocation implements LocationListener {
         this.mainActivity = mainActivity;
         globalVariables = (GlobalVariables) mainActivity.getApplication();
         geocoder = new Geocoder(mainActivity, Locale.getDefault());
-        setUpResetButton();
-        setUpSeekBar();
+        if (!globalVariables.isLandScape()){
+            setUpResetButton();
+            setUpSeekBar();
+        }
     }
 
     @Override

@@ -53,19 +53,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     GlobalVariables globalVariables;
     Bundle savedInstanceState;
-    boolean isLandScape, hasRotated;
     GPSLocation gpsLocation;
 
     void run(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
         assignValues();
-        if (!hasRotated){
+        if (!globalVariables.isHasRotated()){
             checkLocationPermission();
         }
         startLocationRequesting();
         createMap();
 
-        if (hasRotated){
+        if (globalVariables.isHasRotated()){
             locationManager.removeUpdates(gpsLocation);
             Toast.makeText(this, "locationManager updated", Toast.LENGTH_SHORT).show();
         }
@@ -114,8 +113,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void assignValues() {
-        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        hasRotated = savedInstanceState != null;
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         globalVariables = (GlobalVariables) this.getApplication();
         globalVariables.setValues(this);

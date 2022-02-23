@@ -1,6 +1,7 @@
 package com.example.gps_app;
 
 import android.app.Application;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class GlobalVariables extends Application {
     private SeekBar seekBar_cameraZoom;
     static float cameraZoomLevel = 15;
     private GPSLocation locationManager;
+    private boolean isLandScape, hasRotated;
 
 
     public void setValues(@NonNull MainActivity mainActivity) {
@@ -40,6 +42,8 @@ public class GlobalVariables extends Application {
         button_reset = mainActivity.findViewById(R.id.button_reset);
         seekBar_cameraZoom = mainActivity.findViewById(R.id.seekBar_cameraZoom);
         locationsMap = new LinkedHashMap<>();
+        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        hasRotated = mainActivity.savedInstanceState != null;
     }
 
     public TextView getTextView_latLon() {
@@ -100,5 +104,13 @@ public class GlobalVariables extends Application {
 
     public GPSLocation getLocationManager() {
         return locationManager;
+    }
+
+    public boolean isLandScape() {
+        return isLandScape;
+    }
+
+    public boolean isHasRotated() {
+        return hasRotated;
     }
 }
