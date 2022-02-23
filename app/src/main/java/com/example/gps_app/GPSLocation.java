@@ -30,6 +30,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 class GPSLocation implements LocationListener {
     private static final String TAG = "test";
@@ -50,6 +56,7 @@ class GPSLocation implements LocationListener {
             setUpResetButton();
             setUpSeekBar();
         }
+        startTimer();
     }
 
     @Override
@@ -88,8 +95,17 @@ class GPSLocation implements LocationListener {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         String locationName = addresses.get(0).getAddressLine(0);
-        String lastTime = getTimeStamp(System.currentTimeMillis());
+        String lastTime = getTimeStamp(System.currentTimeMillis(), "h:mm:ss a");
         Marker marker = currentMarker;
+        long timeSpend;
+
+        if (globalVariables.getLocationsMap().get(location) == null){
+            timeSpend = 0;
+        } else {
+
+        }
+
+
         myLocation = new MyLocation(latitude, longitude, locationName, 0, lastTime, marker);
         globalVariables.getLocationsMap().put(location, myLocation);
     }
@@ -104,15 +120,15 @@ class GPSLocation implements LocationListener {
         globalVariables.getTextView_latLon().setText("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
         globalVariables.getTextView_locationName().setText(myLocation.getLocationName());
         globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
-        globalVariables.getTextView_distance().setText(
-//                getTimeStamp(System.currentTimeMillis()) +
-                myLocation.getLastTime()
-                + "");
+//        globalVariables.getTextView_distance().setText(
+////                getTimeStamp(System.currentTimeMillis()) +
+//                myLocation.getLastTime()
+//                + "");
         globalVariables.setCurrentLocation(location);
     }
 
-    public static String getTimeStamp(long milliSecond){
-        return new SimpleDateFormat("h:mm:ss a", Locale.getDefault())
+    public static String getTimeStamp(long milliSecond, String pattern){
+        return new SimpleDateFormat(pattern, Locale.getDefault())
                     .format(new Date(milliSecond));
     }
 
@@ -195,5 +211,23 @@ class GPSLocation implements LocationListener {
         }
 
         globalVariables.getGoogleMap().addPolyline(options);
+    }
+
+//  globalVariables.getTextView_duration().setText(getTimeStamp(System.currentTimeMillis()));
+    private void startTimer(){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mainActivity.runOnUiThread(() -> {
+//                    long time = globalVariables.getStartTime() - System.currentTimeMillis();
+                    long elapsedTime = System.currentTimeMillis() - globalVariables.getStartTime();
+                    long elapsedSeconds = elapsedTime / 1000;
+                    long elapsedMinutes = elapsedSeconds / 60;
+                    long elapsedHour = elapsedMinutes / 60;
+                    globalVariables.getTextView_duration().setText(String.format("Timer: %s:%s:%s", elapsedHour,elapsedMinutes, elapsedSeconds));
+                    globalVariables.setElapsedTime(elapsedTime);
+                });
+            }
+        }, 0, 1000);
     }
 }

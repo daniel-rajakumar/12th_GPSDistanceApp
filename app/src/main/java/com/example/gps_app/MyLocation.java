@@ -6,7 +6,7 @@ public class MyLocation {
     private final double latitude, longitude;
     private final String locationName;
     private final double timeSpend;
-    private static double distanceTraveled;
+    private static float distanceTraveled;
     private String lastTime;
     private Marker marker;
 
@@ -37,7 +37,7 @@ public class MyLocation {
         return timeSpend;
     }
 
-    public static double getDistanceTraveled() {
+    public static float getDistanceTraveled() {
         return distanceTraveled;
     }
 

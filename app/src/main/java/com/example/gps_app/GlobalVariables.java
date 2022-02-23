@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class GlobalVariables extends Application {
 
-    private TextView textView_latLon, textView_locationName, textView_distance;
+    private TextView textView_latLon, textView_locationName, textView_distance, textView_duration;
     private MapView mapView;
     private Location currentLocation;
     private GoogleMap googleMap;
@@ -30,12 +30,14 @@ public class GlobalVariables extends Application {
     static float cameraZoomLevel = 15;
     private GPSLocation locationManager;
     private boolean isLandScape, hasRotated;
+    private long startTime, elapsedTime;
 
 
     public void setValues(@NonNull MainActivity mainActivity) {
         textView_latLon = mainActivity.findViewById(R.id.textView_location3);
         textView_locationName = mainActivity.findViewById(R.id.textView_location2);
         textView_distance = mainActivity.findViewById(R.id.textView_distance);
+        textView_duration = mainActivity.findViewById(R.id.textView_distance3);
         mapView = mainActivity.findViewById(R.id.mapView);
         toggleButton_camera = mainActivity.findViewById(R.id.toggleButton_camera);
         toggleButton_track = mainActivity.findViewById(R.id.toggleButton_track);
@@ -44,6 +46,7 @@ public class GlobalVariables extends Application {
         locationsMap = new LinkedHashMap<>();
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         hasRotated = mainActivity.savedInstanceState != null;
+        startTime = System.currentTimeMillis();
     }
 
     public TextView getTextView_latLon() {
@@ -112,5 +115,21 @@ public class GlobalVariables extends Application {
 
     public boolean isHasRotated() {
         return hasRotated;
+    }
+
+    public TextView getTextView_duration() {
+        return textView_duration;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setElapsedTime(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    public long getElapsedTime() {
+        return elapsedTime;
     }
 }
