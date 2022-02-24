@@ -173,6 +173,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/togglebutton_background"
+        android:clickable="false"
         android:textColor="@color/white"
         android:textOff="Follow"
         android:textOn="Following"

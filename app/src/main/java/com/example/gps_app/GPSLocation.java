@@ -6,7 +6,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
@@ -33,6 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class GPSLocation implements LocationListener {
     private static final String TAG = "test";
@@ -54,6 +54,7 @@ class GPSLocation implements LocationListener {
             setUpResetButton();
             setUpSeekBar();
             setUpOnTrackingListener();
+            setUpOnFollowListener();
 //            try {
 //                updateGlobalVariables(Objects.requireNonNull(getLastKnownLocation()));
 //            } catch (IOException e) { e.printStackTrace(); }
@@ -236,8 +237,26 @@ class GPSLocation implements LocationListener {
         globalVariables.getSeekBar_cameraZoom().setProgress(GlobalVariables.cameraZoomLevel);
     }
 
+    public void setUpOnFollowListener(){
+        globalVariables.getToggleButton_camera().setOnClickListener(v -> {
+            if (!globalVariables.getToggleButton_track().isChecked()){
+                globalVariables.getToggleButton_camera().setChecked(false);
+                globalVariables.getToggleButton_camera().setClickable(false);
+            }
+
+            if (!globalVariables.getToggleButton_camera().isClickable())
+                Toast.makeText(mainActivity, "Can not follow while not tracking.", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+
+
     public void setUpOnTrackingListener(){
+        AtomicBoolean toggle = new AtomicBoolean(false);
         globalVariables.getToggleButton_track().setOnClickListener(v -> {
+            toggle.set(!toggle.get());
+            globalVariables.getToggleButton_camera().setClickable(toggle.get());
+            globalVariables.getToggleButton_camera().setChecked(false);
             if (globalVariables.getLocationsMap().isEmpty()){
 //                onLocationChanged(Objects.requireNonNull(getLastKnownLocation()));
             }
