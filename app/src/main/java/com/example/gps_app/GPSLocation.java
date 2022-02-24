@@ -239,27 +239,18 @@ class GPSLocation implements LocationListener {
 
     public void setUpOnFollowListener(){
         globalVariables.getToggleButton_camera().setOnClickListener(v -> {
-            if (!globalVariables.getToggleButton_track().isChecked()){
+            if (!globalVariables.getToggleButton_track().isChecked()) {
                 globalVariables.getToggleButton_camera().setChecked(false);
-                globalVariables.getToggleButton_camera().setClickable(false);
-            }
-
-            if (!globalVariables.getToggleButton_camera().isClickable())
                 Toast.makeText(mainActivity, "Can not follow while not tracking.", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
 
 
     public void setUpOnTrackingListener(){
-        AtomicBoolean toggle = new AtomicBoolean(false);
         globalVariables.getToggleButton_track().setOnClickListener(v -> {
-            toggle.set(!toggle.get());
-            globalVariables.getToggleButton_camera().setClickable(toggle.get());
             globalVariables.getToggleButton_camera().setChecked(false);
-            if (globalVariables.getLocationsMap().isEmpty()){
-//                onLocationChanged(Objects.requireNonNull(getLastKnownLocation()));
-            }
         });
     }
 
