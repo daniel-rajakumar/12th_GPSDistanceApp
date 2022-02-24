@@ -246,8 +246,6 @@ class GPSLocation implements LocationListener {
         });
     }
 
-
-
     public void setUpOnTrackingListener(){
         globalVariables.getToggleButton_track().setOnClickListener(v -> {
             globalVariables.getToggleButton_camera().setChecked(false);
