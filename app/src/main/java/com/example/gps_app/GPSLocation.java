@@ -292,6 +292,7 @@ class GPSLocation implements LocationListener {
                     long elapsedMinutes = elapsedSeconds / 60;
                     long elapsedHour = elapsedMinutes / 60;
                     globalVariables.getTextView_duration().setText(String.format("Timer: %s:%s:%s", elapsedHour, elapsedMinutes, elapsedSeconds % 60));
+
 //                    globalVariables.getTextView_duration().setText(getTimeStamp(elapsedTime, "hh:mm:ss"));
 //                    globalVariables.setElapsedTime(elapsedTime);
                     if (globalVariables.getToggleButton_track().isChecked())
@@ -310,6 +311,7 @@ class GPSLocation implements LocationListener {
 
                     Log.d(TAG + "6", "run: " + globalVariables.getLocationsMap().size());
 
+                    updateCameraBearing(globalVariables.getCurrentLocation().getBearing());
 
                 });
             }
