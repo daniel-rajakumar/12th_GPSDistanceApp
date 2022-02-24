@@ -27,8 +27,8 @@ public class GlobalVariables extends Application {
     private ToggleButton toggleButton_camera, toggleButton_track;
     private Button button_reset;
     private SeekBar seekBar_cameraZoom;
-    static float cameraZoomLevel = 15;
-    private GPSLocation locationManager;
+    static int cameraZoomLevel = 4;
+    private LocationManager locationManager;
     private boolean isLandScape, hasRotated;
     private long startTime, elapsedTime;
 
@@ -81,6 +81,14 @@ public class GlobalVariables extends Application {
         this.previousLocation = previousLocation;
     }
 
+    public LocationManager getLocationManager() {
+        return locationManager;
+    }
+
+    public void setLocationManager(LocationManager locationManager) {
+        this.locationManager = locationManager;
+    }
+
     public Location getPreviousLocation() {
         return previousLocation;
     }
@@ -107,14 +115,6 @@ public class GlobalVariables extends Application {
 
     public SeekBar getSeekBar_cameraZoom() {
         return seekBar_cameraZoom;
-    }
-
-    public void setLocationManager(GPSLocation locationManager) {
-        this.locationManager = locationManager;
-    }
-
-    public GPSLocation getLocationManager() {
-        return locationManager;
     }
 
     public boolean isLandScape() {
@@ -153,5 +153,6 @@ public class GlobalVariables extends Application {
         startTime = System.currentTimeMillis();
         elapsedTime = 0;
         textView_distance.setText("0 meters");
+
     }
 }

@@ -35,6 +35,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -102,11 +103,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
+        globalVariables.setLocationManager(locationManager);
         gpsLocation = new GPSLocation(this);
-        locationManager.requestLocationUpdates(getBestProvider(), 0, 5, gpsLocation);
+        locationManager.requestLocationUpdates(getBestProvider(locationManager), 0, 5, gpsLocation);
     }
 
-    String getBestProvider() {
+    static String getBestProvider(LocationManager locationManager) {
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
         return locationManager.getBestProvider(criteria, true);
@@ -132,18 +134,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getWindow().setStatusBarColor(Color.TRANSPARENT);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.custom_map_style));
-        globalVariables.setGoogleMap(googleMap);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        googleMap.setMyLocationEnabled(true);
-
-        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
+    public void setUpCustomMarkerWindow(){
+        globalVariables.getGoogleMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker arg0) {
                 return null;
@@ -171,6 +163,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return info;
             }
         });
+
+    }
+
+    void moveCameraTo(double lat, double lon){
+        LatLng latLng = new LatLng(lat, lon);
+        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.custom_map_style));
+        globalVariables.setGoogleMap(googleMap);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+
+        moveCameraTo(globalVariables.getCurrentLocation().getLatitude(),
+                     globalVariables.getCurrentLocation().getLongitude());
+        setUpCustomMarkerWindow();
     }
 
     @Override
