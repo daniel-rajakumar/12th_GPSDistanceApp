@@ -80,9 +80,10 @@ class GPSLocation implements LocationListener {
     public void onLocationChanged(@NonNull Location location) {
 //        updateCameraBearing(location.getBearing());
 //         Toast.makeText(mainActivity, getLastKnownLocation() + "", Toast.LENGTH_SHORT).show();
-//        Log.d(TAG, "manager: " + location.getLatitude() + ", " + location.getLongitude());
+        Log.d(TAG, "manager: " + location.getLatitude() + ", " + location.getLongitude());
         try {
-            if (globalVariables.getToggleButton_track().isChecked()) {
+            if (globalVariables.getToggleButton_track().isChecked()
+             || globalVariables.getLocationsMap().isEmpty()) {
                 updateDistance(location);
                 updateGlobalVariables(location);
                 updateViews(location);
@@ -238,7 +239,7 @@ class GPSLocation implements LocationListener {
     public void setUpOnTrackingListener(){
         globalVariables.getToggleButton_track().setOnClickListener(v -> {
             if (globalVariables.getLocationsMap().isEmpty()){
-                onLocationChanged(Objects.requireNonNull(getLastKnownLocation()));
+//                onLocationChanged(Objects.requireNonNull(getLastKnownLocation()));
             }
         });
     }
@@ -277,13 +278,16 @@ class GPSLocation implements LocationListener {
             public void run() {
                 mainActivity.runOnUiThread(() -> {
 //                    long time = globalVariables.getStartTime() - System.currentTimeMillis();
-                    long elapsedTime = System.currentTimeMillis() - globalVariables.getStartTime();
+//                    long elapsedTime = System.currentTimeMillis() - globalVariables.getStartTime();
+                    long elapsedTime = globalVariables.getElapsedTime();
                     long elapsedSeconds = elapsedTime / 1000;
                     long elapsedMinutes = elapsedSeconds / 60;
                     long elapsedHour = elapsedMinutes / 60;
                     globalVariables.getTextView_duration().setText(String.format("Timer: %s:%s:%s", elapsedHour, elapsedMinutes, elapsedSeconds % 60));
 //                    globalVariables.getTextView_duration().setText(getTimeStamp(elapsedTime, "hh:mm:ss"));
-                    globalVariables.setElapsedTime(elapsedTime);
+//                    globalVariables.setElapsedTime(elapsedTime);
+                    if (globalVariables.getToggleButton_track().isChecked())
+                        globalVariables.addElapsedTime(1000);
 
                     if (globalVariables.getToggleButton_camera().isChecked()
 //                     && globalVariables.getToggleButton_track().isChecked()

@@ -137,6 +137,10 @@ public class GlobalVariables extends Application {
         this.elapsedTime = elapsedTime;
     }
 
+    public void addElapsedTime(long elapsedTime) {
+        this.elapsedTime += elapsedTime;
+    }
+
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
