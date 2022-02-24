@@ -311,8 +311,7 @@ class GPSLocation implements LocationListener {
 
                     Log.d(TAG + "6", "run: " + globalVariables.getLocationsMap().size());
 
-                    updateCameraBearing(globalVariables.getCurrentLocation().getBearing());
-
+//                    updateCameraBearing(globalVariables.getCurrentLocation().getBearing());
                 });
             }
         }, 0, 1000);

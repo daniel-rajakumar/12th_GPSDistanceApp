@@ -38,7 +38,7 @@
             android:id="@+id/textView_distance3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(Lat, Lon)"
+            android:text="Timer"
             android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="@+id/textView_distance2"
@@ -50,7 +50,7 @@
             android:id="@+id/imageView2"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:src="@drawable/icon_location"
+            android:src="@drawable/icon_distance"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.03"
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Name"
+                android:text="Length"
                 android:textAlignment="textStart"
                 android:textColor="@color/white"
                 android:textSize="30sp" />
@@ -213,7 +213,6 @@
         android:id="@+id/seekBar_cameraZoom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:max="22"
         android:progressDrawable="@drawable/seekbar_background"
         android:thumb="@drawable/seekbar_foreground"
@@ -230,11 +229,11 @@
         app:layout_constraintGuide_percent="0.55" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
+        android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9206566" />
+        app:layout_constraintGuide_percent="0.71" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -244,11 +243,11 @@
         app:layout_constraintGuide_percent="0.8508892" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
+        android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.71" />
+        app:layout_constraintGuide_percent="0.9206566" />
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
