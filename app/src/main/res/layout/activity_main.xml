@@ -17,10 +17,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:uiCompass="true"
-        app:uiZoomControls="true"
-        app:zOrderOnTop="true" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
@@ -28,11 +25,11 @@
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:background="@drawable/card_background"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar_cameraZoom"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5">
+        app:layout_constraintTop_toTopOf="@+id/guideline3">
 
         <TextView
             android:id="@+id/textView_distance3"
@@ -100,12 +97,10 @@
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:background="@drawable/card_background"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapView"
-        app:layout_constraintVertical_chainStyle="spread">
+        app:layout_constraintTop_toTopOf="@+id/guideline5">
 
         <TextView
             android:id="@+id/textView_location3"
@@ -233,7 +228,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.71" />
+        app:layout_constraintGuide_percent="0.70" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
