@@ -59,7 +59,10 @@ class GPSLocation implements LocationListener {
 //                updateGlobalVariables(Objects.requireNonNull(getLastKnownLocation()));
 //            } catch (IOException e) { e.printStackTrace(); }
         }
-        startTimer();
+
+        if (!globalVariables.isHasRotated()){
+            startTimer();
+        }
 //        LatLng latLng = new LatLng(globalVariables.getCurrentLocation().getLatitude(), globalVariables.getCurrentLocation().getLongitude());
 //        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
 //        addCurrentLocation();
