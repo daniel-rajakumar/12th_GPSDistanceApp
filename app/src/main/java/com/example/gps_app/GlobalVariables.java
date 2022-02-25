@@ -1,9 +1,12 @@
 package com.example.gps_app;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ import java.util.Map;
 
 public class GlobalVariables extends Application {
 
+    private static final String TAG = "test";
     private TextView textView_latLon, textView_locationName, textView_distance, textView_duration;
     private MapView mapView;
     private Location currentLocation, previousLocation;
@@ -30,10 +34,13 @@ public class GlobalVariables extends Application {
     static int cameraZoomLevel = 4;
     private LocationManager locationManager;
     private boolean isLandScape, hasRotated;
-    private long startTime, elapsedTime;
+    private long elapsedTime;
+    private Bundle savedInstance;
+    GlobalVariables globalVariables;
 
 
     public void setValues(@NonNull MainActivity mainActivity) {
+        globalVariables = (GlobalVariables) mainActivity.getApplication();
         textView_latLon = mainActivity.findViewById(R.id.textView_location3);
         textView_locationName = mainActivity.findViewById(R.id.textView_location2);
         textView_distance = mainActivity.findViewById(R.id.textView_distance);
@@ -46,7 +53,11 @@ public class GlobalVariables extends Application {
         locationsMap = new LinkedHashMap<>();
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         hasRotated = mainActivity.savedInstanceState != null;
-        startTime = System.currentTimeMillis();
+
+        if (hasRotated){
+            googleMap = mainActivity.getIntent().getParcelableExtra("gmap");
+            locationsMap = (Map<Location, MyLocation>) mainActivity.getIntent().getSerializableExtra("map");
+        }
     }
 
     public TextView getTextView_latLon() {
@@ -97,6 +108,10 @@ public class GlobalVariables extends Application {
         return mapView;
     }
 
+    public void setMapView(MapView mapView) {
+        this.mapView = mapView;
+    }
+
     public Map<Location, MyLocation> getLocationsMap() {
         return locationsMap;
     }
@@ -129,10 +144,6 @@ public class GlobalVariables extends Application {
         return textView_duration;
     }
 
-    public long getStartTime() {
-        return startTime;
-    }
-
     public void setElapsedTime(long elapsedTime) {
         this.elapsedTime = elapsedTime;
     }
@@ -141,12 +152,16 @@ public class GlobalVariables extends Application {
         this.elapsedTime += elapsedTime;
     }
 
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
     public long getElapsedTime() {
         return elapsedTime;
+    }
+
+    public void setSavedInstance(Bundle savedInstance) {
+        this.savedInstance = savedInstance;
+    }
+
+    public Bundle getSavedInstance() {
+        return savedInstance;
     }
 
     public void resetValues(){
@@ -154,9 +169,7 @@ public class GlobalVariables extends Application {
         googleMap.clear();
         locationsMap.clear();
         previousLocation = null;
-        startTime = System.currentTimeMillis();
         elapsedTime = 0;
         textView_distance.setText("0 meters");
-
     }
 }

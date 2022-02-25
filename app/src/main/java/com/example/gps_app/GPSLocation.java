@@ -6,12 +6,14 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -32,7 +34,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 class GPSLocation implements LocationListener {
     private static final String TAG = "test";
@@ -45,6 +46,7 @@ class GPSLocation implements LocationListener {
     MyLocation myLocation;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     GPSLocation(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         globalVariables = (GlobalVariables) mainActivity.getApplication();
@@ -62,6 +64,10 @@ class GPSLocation implements LocationListener {
 
         if (!globalVariables.isHasRotated()){
             startTimer();
+        }
+
+        if (globalVariables.isHasRotated()){
+            placeAllMarkers();
         }
 //        LatLng latLng = new LatLng(globalVariables.getCurrentLocation().getLatitude(), globalVariables.getCurrentLocation().getLongitude());
 //        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
@@ -202,6 +208,7 @@ class GPSLocation implements LocationListener {
     }
 
     public void moveCameraTo(Location location) {
+        if (globalVariables.getGoogleMap() == null) return;
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
     }
@@ -326,5 +333,22 @@ class GPSLocation implements LocationListener {
         }
 
         return globalVariables.getLocationManager().getLastKnownLocation(MainActivity.getBestProvider(globalVariables.getLocationManager()));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void placeAllMarkers(){
+        new Thread(() -> {
+            while (globalVariables.getGoogleMap() == null);
+            mainActivity.runOnUiThread(() -> {
+                int count = 0;
+                Set<Map.Entry<Location, MyLocation>> set = globalVariables.getLocationsMap().entrySet();
+                for (Map.Entry<Location, MyLocation> entry: set){
+                    if (count++ < set.size() - 1)
+                        addMarkerTo(entry.getKey());
+
+                }
+                drawPrimaryLinePath(globalVariables.getLocationsMap().keySet());
+            });
+        }).start();
     }
 }

@@ -44,9 +44,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int PERMISSION_FINE_LOCATION = 99;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     void run(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
         assignValues();
+        globalVariables.setSavedInstance(savedInstanceState);
         if (!globalVariables.isHasRotated()){
             checkLocationPermission();
         }
@@ -118,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         globalVariables = (GlobalVariables) this.getApplication();
         globalVariables.setValues(this);
+        if (globalVariables.isHasRotated()){
+
+        }
     }
 
     void createMap() {
@@ -174,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        Toast.makeText(this, "map is ready", Toast.LENGTH_SHORT).show();
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.custom_map_style));
         globalVariables.setGoogleMap(googleMap);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -181,8 +189,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         googleMap.setMyLocationEnabled(true);
 
-        moveCameraTo(globalVariables.getCurrentLocation().getLatitude(),
-                     globalVariables.getCurrentLocation().getLongitude());
+        if (globalVariables.getCurrentLocation() != null)
+            moveCameraTo(globalVariables.getCurrentLocation().getLatitude(),
+                         globalVariables.getCurrentLocation().getLongitude());
+
         setUpCustomMarkerWindow();
     }
 
@@ -224,11 +234,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         globalVariables.getMapView().onDestroy();
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        globalVariables.getMapView().onSaveInstanceState(outState);
-    }
 
     @Override
     public void onLowMemory() {
@@ -236,6 +241,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         globalVariables.getMapView().onLowMemory();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Intent intent = new Intent(this, Map.class);
+        globalVariables.getMapView().onSaveInstanceState(outState);
+        Log.d(TAG + "8", "onSaveInstanceState: (length: " + globalVariables.getLocationsMap().size() + ") -> "+ globalVariables.getLocationsMap());
+        this.getIntent().putExtra("map", (Serializable) globalVariables.getLocationsMap());
+    }
 
 }
 
