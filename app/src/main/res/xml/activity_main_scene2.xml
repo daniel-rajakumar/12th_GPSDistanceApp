@@ -55,10 +55,6 @@
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
             motion:layout_constraintBottom_toTopOf="@+id/seekBar_cameraZoom"
             motion:layout_constraintHorizontal_bias="0.5"
             android:visibility="visible"
@@ -69,5 +65,14 @@
             motion:layout_constraintGuide_percent="0.86"
             android:layout_width="wrap_content"
             android:id="@+id/guideline3" />
+        <Constraint
+            android:id="@+id/background"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
+            android:visibility="visible"
+            motion:layout_constraintTop_toBottomOf="@+id/mapView"
+            motion:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 </MotionScene>
