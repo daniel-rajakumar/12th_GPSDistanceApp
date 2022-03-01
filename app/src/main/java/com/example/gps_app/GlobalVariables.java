@@ -1,12 +1,10 @@
 package com.example.gps_app;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,7 +20,6 @@ import java.util.Map;
 
 public class GlobalVariables extends Application {
 
-    private static final String TAG = "test";
     private TextView textView_latLon, textView_locationName, textView_distance, textView_duration;
     private MapView mapView;
     private Location currentLocation, previousLocation;
@@ -108,10 +105,6 @@ public class GlobalVariables extends Application {
         return mapView;
     }
 
-    public void setMapView(MapView mapView) {
-        this.mapView = mapView;
-    }
-
     public Map<Location, MyLocation> getLocationsMap() {
         return locationsMap;
     }
@@ -144,10 +137,6 @@ public class GlobalVariables extends Application {
         return textView_duration;
     }
 
-    public void setElapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
-    }
-
     public void addElapsedTime(long elapsedTime) {
         this.elapsedTime += elapsedTime;
     }
@@ -158,10 +147,6 @@ public class GlobalVariables extends Application {
 
     public void setSavedInstance(Bundle savedInstance) {
         this.savedInstance = savedInstance;
-    }
-
-    public Bundle getSavedInstance() {
-        return savedInstance;
     }
 
     public void resetValues(){

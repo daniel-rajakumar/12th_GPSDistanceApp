@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -18,7 +17,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,8 +34,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 class GPSLocation implements LocationListener {
-    private static final String TAG = "test";
-    double distance = 0;
     Geocoder geocoder;
     GlobalVariables globalVariables;
     MainActivity mainActivity;
@@ -57,9 +53,6 @@ class GPSLocation implements LocationListener {
             setUpSeekBar();
             setUpOnTrackingListener();
             setUpOnFollowListener();
-//            try {
-//                updateGlobalVariables(Objects.requireNonNull(getLastKnownLocation()));
-//            } catch (IOException e) { e.printStackTrace(); }
         }
 
         if (!globalVariables.isHasRotated()){
@@ -69,28 +62,19 @@ class GPSLocation implements LocationListener {
         if (globalVariables.isHasRotated()){
             placeAllMarkers();
         }
-//        LatLng latLng = new LatLng(globalVariables.getCurrentLocation().getLatitude(), globalVariables.getCurrentLocation().getLongitude());
-//        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
-//        addCurrentLocation();
     }
 
     @Override
-    public void onProviderEnabled(@NonNull String provider) {
-    }
+    public void onProviderEnabled(@NonNull String provider) { }
 
     @Override
-    public void onProviderDisabled(@NonNull String provider) {
-    }
+    public void onProviderDisabled(@NonNull String provider) { }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras) { }
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-//        updateCameraBearing(location.getBearing());
-//         Toast.makeText(mainActivity, getLastKnownLocation() + "", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "manager: " + location.getLatitude() + ", " + location.getLongitude());
         try {
             if (globalVariables.getToggleButton_track().isChecked()
              || globalVariables.getLocationsMap().isEmpty()) {
@@ -120,28 +104,7 @@ class GPSLocation implements LocationListener {
 
         removeOldLocation(location);
         globalVariables.getLocationsMap().put(location, myLocation);
-        Log.d(TAG + "3", "updateGlobalVariables: " + globalVariables.getLocationsMap().size() + " -> " + globalVariables.getLocationsMap());
-//        Log.d(TAG + "3", "updateGlobalVariables: " + oldLocation + " -> ");
     }
-
-    public void addCurrentLocation(){
-        try {
-            Location location = getLastKnownLocation();
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            String locationName = addresses.get(0).getAddressLine(0);
-            long startTime = System.currentTimeMillis();
-            Marker marker = currentMarker;
-            MyLocation myLocation = new MyLocation(latitude, longitude, locationName, startTime, marker);
-            globalVariables.getLocationsMap().put(getLastKnownLocation(), myLocation);
-            Toast.makeText(mainActivity, "added success", Toast.LENGTH_SHORT).show();
-        } catch (Exception e){
-            Toast.makeText(mainActivity, "added fail", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-    }
-
 
     public void removeOldLocation(Location previousLocation) {
         if ((oldLocation = getLocationEntry(previousLocation)) != null) {
@@ -170,10 +133,6 @@ class GPSLocation implements LocationListener {
         globalVariables.getTextView_latLon().setText("(" + myLocation.getLatitude() + ", " + myLocation.getLongitude() + ")");
         globalVariables.getTextView_locationName().setText(myLocation.getLocationName());
         globalVariables.getTextView_distance().setText(MyLocation.getDistanceTraveled() + " meters");
-//        globalVariables.getTextView_distance().setText(
-////                getTimeStamp(System.currentTimeMillis()) +
-//                myLocation.getLastTime()
-//                + "");
         globalVariables.setCurrentLocation(location);
     }
 
@@ -213,11 +172,6 @@ class GPSLocation implements LocationListener {
         globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
     }
 
-    public void moveCameraTo(double lat, double lon) {
-        LatLng latLng = new LatLng(lat, lon);
-        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
-    }
-
     public void setUpResetButton() {
         globalVariables.getButton_reset().setOnClickListener(v -> {
             globalVariables.resetValues();
@@ -241,7 +195,6 @@ class GPSLocation implements LocationListener {
                 Toast.makeText(mainActivity, "Zoom level: " + seekBar.getProgress(), Toast.LENGTH_SHORT).show();
                 LatLng latLng = new LatLng(globalVariables.getCurrentLocation().getLatitude(), globalVariables.getCurrentLocation().getLongitude());
                 globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, GlobalVariables.cameraZoomLevel));
-                Log.d(TAG, "onStartTrackingTouch: " + seekBar.getProgress());
             }
         });
         globalVariables.getSeekBar_cameraZoom().setProgress(GlobalVariables.cameraZoomLevel);
@@ -262,16 +215,6 @@ class GPSLocation implements LocationListener {
         });
     }
 
-    private void updateCameraBearing(float bearing) {
-        CameraPosition camPos = CameraPosition
-                .builder(
-                        globalVariables.getGoogleMap().getCameraPosition() // current Camera
-                )
-                .bearing(bearing)
-                .build();
-        globalVariables.getGoogleMap().animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
-    }
-
     private void drawPrimaryLinePath(Set<Location> listLocsToDraw) {
         if (globalVariables.getGoogleMap() == null) return;
         if (listLocsToDraw.size() < 2) return;
@@ -289,39 +232,24 @@ class GPSLocation implements LocationListener {
         globalVariables.getGoogleMap().addPolyline(options);
     }
 
-    //  globalVariables.getTextView_duration().setText(getTimeStamp(System.currentTimeMillis()));
     private void startTimer() {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 mainActivity.runOnUiThread(() -> {
-//                    long time = globalVariables.getStartTime() - System.currentTimeMillis();
-//                    long elapsedTime = System.currentTimeMillis() - globalVariables.getStartTime();
                     long elapsedTime = globalVariables.getElapsedTime();
                     long elapsedSeconds = elapsedTime / 1000;
                     long elapsedMinutes = elapsedSeconds / 60;
                     long elapsedHour = elapsedMinutes / 60;
                     globalVariables.getTextView_duration().setText(String.format("Timer: %s:%s:%s", elapsedHour, elapsedMinutes, elapsedSeconds % 60));
 
-//                    globalVariables.getTextView_duration().setText(getTimeStamp(elapsedTime, "hh:mm:ss"));
-//                    globalVariables.setElapsedTime(elapsedTime);
                     if (globalVariables.getToggleButton_track().isChecked())
                         globalVariables.addElapsedTime(1000);
 
                     if (globalVariables.getToggleButton_camera().isChecked()
-//                     && globalVariables.getToggleButton_track().isChecked()
                             && globalVariables.getCurrentLocation() != null) {
                         moveCameraTo(globalVariables.getCurrentLocation());
-
-//                        double lat = globalVariables.getGoogleMap().getCameraPosition().target.latitude;
-//                        double lon = globalVariables.getGoogleMap().getCameraPosition().target.longitude;
-//                        moveCameraTo(lat, lon);
-//                        Toast.makeText(mainActivity, "(" + lat + ", " + lon + ")", Toast.LENGTH_SHORT).show();
                     }
-
-                    Log.d(TAG + "6", "run: " + globalVariables.getLocationsMap().size());
-
-//                    updateCameraBearing(globalVariables.getCurrentLocation().getBearing());
                 });
             }
         }, 0, 1000);
@@ -335,7 +263,6 @@ class GPSLocation implements LocationListener {
         return globalVariables.getLocationManager().getLastKnownLocation(MainActivity.getBestProvider(globalVariables.getLocationManager()));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void placeAllMarkers(){
         new Thread(() -> {
             while (globalVariables.getGoogleMap() == null);
