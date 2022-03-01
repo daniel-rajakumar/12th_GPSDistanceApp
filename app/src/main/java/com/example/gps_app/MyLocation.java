@@ -23,7 +23,6 @@ public class MyLocation {
     }
 
 
-
     public double getLatitude() {
         return latitude;
     }
